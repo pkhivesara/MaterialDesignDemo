@@ -1,25 +1,48 @@
 package com.test.materialdesigndemo;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FirstFragment extends Fragment {
     RecyclerView recyclerView;
+    Button button;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
          recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
+        button = (Button)view.findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new GetSampleResponse().execute();
+            }
+        });
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -77,5 +100,62 @@ public class FirstFragment extends Fragment {
 
             }
         }
+    }
+
+    private class GetSampleResponse extends AsyncTask<String,String,String>{
+
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            String response = makeServiceCall();
+            try {
+               JSONObject jsonObject = new JSONObject(response);
+                JSONObject jsonObject1 = jsonObject.getJSONObject("MRData");
+                String url = jsonObject1.getString("url");
+                JSONObject table = jsonObject1.getJSONObject("DriverTable");
+                JSONArray jsonArray = table.getJSONArray("Drivers");
+
+                for(int i = 0;i< jsonArray.length(); i ++){
+                    JSONObject innerObject  = jsonArray.getJSONObject(i);
+                    String id = innerObject.getString("driverId");
+                    String name = innerObject.getString("familyName");
+                Log.d("@@@",id + name);
+                }
+
+                Log.d("@@@",url);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("######", e.getMessage());
+            }
+            return null;
+        }
+    }
+
+
+    private String makeServiceCall(){
+        StringBuffer response = null;
+        URL url = null;
+        try {
+            url = new URL("http://ergast.com/api/f1/2011/drivers.json");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        try {
+            HttpURLConnection httpsURLConnection = (HttpURLConnection)url.openConnection();
+            httpsURLConnection.setRequestMethod("GET");
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(httpsURLConnection.getInputStream()));
+            String inputLine;
+             response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response.toString();
     }
 }
