@@ -40,7 +40,7 @@ public class FirstFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GetSampleResponse().execute();
+                new GetAnotherSampleResponse().execute();
             }
         });
         recyclerView.setHasFixedSize(true);
@@ -102,6 +102,49 @@ public class FirstFragment extends Fragment {
         }
     }
 
+    private class GetAnotherSampleResponse extends AsyncTask<String,String,String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            String response = makeServiceCall();
+            try{
+                JSONObject jsonObject = new JSONObject(response);
+                JSONObject mrData = jsonObject.getJSONObject("MRData");
+                String url = mrData.getString("url");
+                Log.d("###",url);
+                JSONObject raceTable = mrData.getJSONObject("RaceTable");
+                String season = raceTable.getString("season");
+                String driverId = raceTable.getString("driverId");
+                Log.d("!!!",season + "   " + driverId);
+                JSONArray raceArray = raceTable.getJSONArray("Races");
+                for(int i = 0;i<raceArray.length();i++){
+                        JSONObject jsonObject1  =raceArray.getJSONObject(i);
+                    String round  = jsonObject1.getString("round");
+                    String raceName = jsonObject1.getString("raceName");
+                    Log.d("$$$",round + "   " + raceName);
+                    JSONObject circuit = jsonObject1.getJSONObject("Circuit");
+                    JSONObject location = circuit.getJSONObject("Location");
+                    String country = location.getString("country");
+                    Log.d("%%%", country);
+                    JSONArray quali = jsonObject1.getJSONArray("QualifyingResults");
+
+                    for(int j = 0; j<quali.length();j++){
+                        JSONObject innerObject = quali.getJSONObject(j);
+                        String position = innerObject.getString("position");
+                        String Q1 = innerObject.getString("Q1");
+                        Log.d("***",position + "    " + Q1);
+                    }
+
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     private class GetSampleResponse extends AsyncTask<String,String,String>{
 
 
@@ -112,18 +155,39 @@ public class FirstFragment extends Fragment {
             try {
                JSONObject jsonObject = new JSONObject(response);
                 JSONObject jsonObject1 = jsonObject.getJSONObject("MRData");
-                String url = jsonObject1.getString("url");
-                JSONObject table = jsonObject1.getJSONObject("DriverTable");
-                JSONArray jsonArray = table.getJSONArray("Drivers");
+                String total = jsonObject1.getString("total");
+                Log.d("@@@",total);
+                JSONObject table = jsonObject1.getJSONObject("RaceTable");
+                String season = table.getString("season");
+                Log.d("@@@",season);
+                JSONArray jsonArray = table.getJSONArray("Races");
 
                 for(int i = 0;i< jsonArray.length(); i ++){
                     JSONObject innerObject  = jsonArray.getJSONObject(i);
-                    String id = innerObject.getString("driverId");
-                    String name = innerObject.getString("familyName");
-                Log.d("@@@",id + name);
+                    String id = innerObject.getString("raceName");
+                    Log.d("@@@",id);
+                    JSONObject name = innerObject.getJSONObject("Circuit");
+                    String circuitName = name.getString("circuitName");
+                    String date = innerObject.getString("date");
+                    Log.d("###",circuitName + date);
+                    JSONArray laps = innerObject.getJSONArray("Laps");
+
+                    for(int j = 0;j< laps.length();j++){
+                        JSONObject jsonObject2 = laps.getJSONObject(j);
+                        String number = jsonObject2.getString("number");
+                        Log.d("$$$",number);
+                        JSONArray timings = jsonObject2.getJSONArray("Timings");
+                        for(int k = 0;k<timings.length();k++){
+                            JSONObject jsonObject3 = timings.getJSONObject(k);
+                            String driverName = jsonObject3.getString("driverId");
+                            Log.d("%%%",driverName);
+                        }
+                    }
+
+                Log.d("^^^",id + name);
                 }
 
-                Log.d("@@@",url);
+                Log.d("***",total);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -138,7 +202,7 @@ public class FirstFragment extends Fragment {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://ergast.com/api/f1/2011/drivers.json");
+            url = new URL("http://ergast.com/api/f1/2008/drivers/alonso/qualifying.json");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
