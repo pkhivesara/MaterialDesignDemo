@@ -34,93 +34,102 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
-         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
-
-
+        recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        initializeData();
+        new GetAnotherSampleResponse().execute();
         return view;
 
     }
-    private List<TestData> testDataList;
 
 
-    private void initializeData() {
-        testDataList = new ArrayList<TestData>();
-        testDataList.add(new TestData("ROW 1 - DATASET 1", "ROW 2 - DATASET 1"));
-        testDataList.add(new TestData("ROW 1 - DATASET 2", "ROW 2 - DATASET 2"));
-        testDataList.add(new TestData("ROW 1 - DATASET 3", "ROW 2 - DATASET 3"));
-        MyAdapter myAdapter = new MyAdapter(testDataList);
+    private void initializeData(List<String> responseList) {
+
+        MyAdapter myAdapter = new MyAdapter(responseList);
         recyclerView.setAdapter(myAdapter);
     }
 
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+    public static MainFragment newInstance() {
+        return new MainFragment();
+    }
 
-        List<TestData> testDataLiST;
+    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
-        MyAdapter(List<TestData> testDataList){
-            this.testDataLiST = testDataList;
+        List<String> responseList;
+
+        MyAdapter(List<String> testDataList) {
+            this.responseList = testDataList;
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_first, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
             return new ViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-
+        String raceName = responseList.get(position);
+            holder.raceNameTextView.setText(raceName);
         }
 
         @Override
         public int getItemCount() {
-            return testDataLiST.size();
+            return responseList.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder{
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView raceNameTextView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-
+                raceNameTextView = (TextView) itemView.findViewById(R.id.raceName);
 
             }
         }
     }
 
-    private class GetAnotherSampleResponse extends AsyncTask<String,String,String>{
+    private class GetAnotherSampleResponse extends AsyncTask<Void, Void, List> {
 
         @Override
-        protected String doInBackground(String... params) {
+        protected void onPostExecute(List list) {
+            super.onPostExecute(list);
+            initializeData(list);
+
+        }
+
+        @Override
+        protected List doInBackground(Void... params) {
             String response = makeServiceCall();
-            try{
+            List<String> responseList = new ArrayList<String>();
+            try {
                 JSONObject jsonObject = new JSONObject(response);
                 JSONObject mrData = jsonObject.getJSONObject("MRData");
                 String url = mrData.getString("url");
-                Log.d("###",url);
+                Log.d("###", url);
                 JSONObject raceTable = mrData.getJSONObject("RaceTable");
                 String season = raceTable.getString("season");
                 String driverId = raceTable.getString("driverId");
-                Log.d("!!!",season + "   " + driverId);
+                Log.d("!!!", season + "   " + driverId);
                 JSONArray raceArray = raceTable.getJSONArray("Races");
-                for(int i = 0;i<raceArray.length();i++){
-                        JSONObject jsonObject1  =raceArray.getJSONObject(i);
-                    String round  = jsonObject1.getString("round");
+                for (int i = 0; i < raceArray.length(); i++) {
+                    JSONObject jsonObject1 = raceArray.getJSONObject(i);
+                    String round = jsonObject1.getString("round");
                     String raceName = jsonObject1.getString("raceName");
-                    Log.d("$$$",round + "   " + raceName);
+                    responseList.add(raceName);
+                    Log.d("$$$", round + "   " + raceName);
                     JSONObject circuit = jsonObject1.getJSONObject("Circuit");
                     JSONObject location = circuit.getJSONObject("Location");
                     String country = location.getString("country");
                     Log.d("%%%", country);
                     JSONArray quali = jsonObject1.getJSONArray("QualifyingResults");
 
-                    for(int j = 0; j<quali.length();j++){
+                    for (int j = 0; j < quali.length(); j++) {
                         JSONObject innerObject = quali.getJSONObject(j);
                         String position = innerObject.getString("position");
                         String Q1 = innerObject.getString("Q1");
-                        Log.d("***",position + "    " + Q1);
+                        Log.d("***", position + "    " + Q1);
                     }
 
                 }
@@ -129,53 +138,52 @@ public class MainFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return null;
+            return responseList;
         }
     }
 
-    private class GetSampleResponse extends AsyncTask<String,String,String>{
-
+    private class GetSampleResponse extends AsyncTask<String, String, String> {
 
 
         @Override
         protected String doInBackground(String... params) {
             String response = makeServiceCall();
             try {
-               JSONObject jsonObject = new JSONObject(response);
+                JSONObject jsonObject = new JSONObject(response);
                 JSONObject jsonObject1 = jsonObject.getJSONObject("MRData");
                 String total = jsonObject1.getString("total");
-                Log.d("@@@",total);
+                Log.d("@@@", total);
                 JSONObject table = jsonObject1.getJSONObject("RaceTable");
                 String season = table.getString("season");
-                Log.d("@@@",season);
+                Log.d("@@@", season);
                 JSONArray jsonArray = table.getJSONArray("Races");
 
-                for(int i = 0;i< jsonArray.length(); i ++){
-                    JSONObject innerObject  = jsonArray.getJSONObject(i);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject innerObject = jsonArray.getJSONObject(i);
                     String id = innerObject.getString("raceName");
-                    Log.d("@@@",id);
+                    Log.d("@@@", id);
                     JSONObject name = innerObject.getJSONObject("Circuit");
                     String circuitName = name.getString("circuitName");
                     String date = innerObject.getString("date");
-                    Log.d("###",circuitName + date);
+                    Log.d("###", circuitName + date);
                     JSONArray laps = innerObject.getJSONArray("Laps");
 
-                    for(int j = 0;j< laps.length();j++){
+                    for (int j = 0; j < laps.length(); j++) {
                         JSONObject jsonObject2 = laps.getJSONObject(j);
                         String number = jsonObject2.getString("number");
-                        Log.d("$$$",number);
+                        Log.d("$$$", number);
                         JSONArray timings = jsonObject2.getJSONArray("Timings");
-                        for(int k = 0;k<timings.length();k++){
+                        for (int k = 0; k < timings.length(); k++) {
                             JSONObject jsonObject3 = timings.getJSONObject(k);
                             String driverName = jsonObject3.getString("driverId");
-                            Log.d("%%%",driverName);
+                            Log.d("%%%", driverName);
                         }
                     }
 
-                Log.d("^^^",id + name);
+                    Log.d("^^^", id + name);
                 }
 
-                Log.d("***",total);
+                Log.d("***", total);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -186,7 +194,7 @@ public class MainFragment extends Fragment {
     }
 
 
-    private String makeServiceCall(){
+    private String makeServiceCall() {
         StringBuffer response = null;
         URL url = null;
         try {
@@ -195,12 +203,12 @@ public class MainFragment extends Fragment {
             e.printStackTrace();
         }
         try {
-            HttpURLConnection httpsURLConnection = (HttpURLConnection)url.openConnection();
+            HttpURLConnection httpsURLConnection = (HttpURLConnection) url.openConnection();
             httpsURLConnection.setRequestMethod("GET");
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(httpsURLConnection.getInputStream()));
             String inputLine;
-             response = new StringBuffer();
+            response = new StringBuffer();
 
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
