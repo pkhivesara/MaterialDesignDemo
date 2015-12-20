@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FirstFragment extends Fragment {
+public class MainFragment extends Fragment {
     RecyclerView recyclerView;
     Button button;
     @Override

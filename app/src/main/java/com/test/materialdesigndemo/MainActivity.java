@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         frameLayout = (FrameLayout)findViewById(R.id.frame_layout);
         setSupportActionBar(toolbar);
-        FirstFragment firstFragment = new FirstFragment();
+        MainFragment firstFragment = new MainFragment();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.frame_layout, firstFragment);
