@@ -29,23 +29,16 @@ import java.util.List;
 
 public class MainFragment extends Fragment {
     RecyclerView recyclerView;
-    Button button;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
          recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
-        button = (Button)view.findViewById(R.id.button);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new GetAnotherSampleResponse().execute();
-            }
-        });
-        recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         initializeData();
         return view;
@@ -53,9 +46,7 @@ public class MainFragment extends Fragment {
     }
     private List<TestData> testDataList;
 
-    // This method creates an ArrayList that has three Person objects
-// Checkout the project associated with this tutorial on Github if
-// you want to use the same images.
+
     private void initializeData() {
         testDataList = new ArrayList<TestData>();
         testDataList.add(new TestData("ROW 1 - DATASET 1", "ROW 2 - DATASET 1"));
@@ -81,8 +72,7 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.rowOne.setText(testDataLiST.get(position).firstRow);
-            holder.rowTwo.setText(testDataLiST.get(position).secondRow);
+
         }
 
         @Override
@@ -91,12 +81,10 @@ public class MainFragment extends Fragment {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder{
-            TextView rowOne;
-            TextView rowTwo;
+
             public ViewHolder(View itemView) {
                 super(itemView);
-                rowOne = (TextView)itemView.findViewById(R.id.row_one);
-                rowTwo = (TextView)itemView.findViewById(R.id.row_two);
+
 
             }
         }
