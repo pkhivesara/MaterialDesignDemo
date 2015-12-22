@@ -80,13 +80,20 @@ public class MainFragment extends Fragment {
             return responseList.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             TextView raceNameTextView;
+
 
             public ViewHolder(View itemView) {
                 super(itemView);
+                itemView.setOnClickListener(this);
                 raceNameTextView = (TextView) itemView.findViewById(R.id.raceName);
 
+            }
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"Clicked row is:" + getAdapterPosition(),Toast.LENGTH_SHORT).show();
             }
         }
     }
