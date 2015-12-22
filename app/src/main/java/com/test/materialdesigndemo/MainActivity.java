@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface{
     Toolbar toolbar;
     FrameLayout frameLayout;
     @Override
@@ -21,5 +21,10 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.frame_layout, firstFragment);
         transaction.commit();
+    }
+
+    @Override
+    public void listItemClicked(int position) {
+
     }
 }

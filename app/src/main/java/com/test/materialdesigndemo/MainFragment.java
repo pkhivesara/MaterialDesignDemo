@@ -1,6 +1,7 @@
 package com.test.materialdesigndemo;
 
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ import java.util.List;
 
 public class MainFragment extends Fragment {
     RecyclerView recyclerView;
+    MainFragmentInterface mainFragmentInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,11 +46,21 @@ public class MainFragment extends Fragment {
 
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mainFragmentInterface = (MainFragmentInterface) activity;
+
+    }
 
     private void initializeData(List<String> responseList) {
 
         MyAdapter myAdapter = new MyAdapter(responseList);
         recyclerView.setAdapter(myAdapter);
+    }
+
+    public interface MainFragmentInterface {
+        void listItemClicked(int position);
     }
 
     public static MainFragment newInstance() {
@@ -71,7 +83,7 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-        String raceName = responseList.get(position);
+            String raceName = responseList.get(position);
             holder.raceNameTextView.setText(raceName);
         }
 
@@ -80,7 +92,7 @@ public class MainFragment extends Fragment {
             return responseList.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView raceNameTextView;
 
 
@@ -93,7 +105,8 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"Clicked row is:" + getAdapterPosition(),Toast.LENGTH_SHORT).show();
+                mainFragmentInterface.listItemClicked(getAdapterPosition());
+                Toast.makeText(getActivity(), "Clicked row is:" + getAdapterPosition(), Toast.LENGTH_SHORT).show();
             }
         }
     }
