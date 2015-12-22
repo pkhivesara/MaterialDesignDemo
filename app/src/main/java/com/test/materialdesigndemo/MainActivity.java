@@ -25,6 +25,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     @Override
     public void listItemClicked(int position) {
-
+        DetailsFragment detailsFragment = DetailsFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putInt("position",position);
+        detailsFragment.setArguments(bundle);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, detailsFragment);
+        transaction.commit();
     }
 }
