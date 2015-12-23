@@ -219,7 +219,7 @@ public class MainFragment extends Fragment {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://ergast.com/api/f1/2008/drivers/alonso/qualifying.json");
+            url = new URL("http://ergast.com/api/f1/2015/drivers/alonso/qualifying.json");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
