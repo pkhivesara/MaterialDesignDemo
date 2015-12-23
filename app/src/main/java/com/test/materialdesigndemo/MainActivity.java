@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         bundle.putInt("position",position);
         detailsFragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
         transaction.replace(R.id.frame_layout, detailsFragment);
         transaction.commit();
     }
