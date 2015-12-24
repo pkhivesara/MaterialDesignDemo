@@ -32,10 +32,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setSupportActionBar(toolbar);
-        MainFragment firstFragment = MainFragment.newInstance();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.frame_layout, firstFragment);
-        transaction.commit();
+//        MainFragment firstFragment = MainFragment.newInstance();
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.add(R.id.frame_layout, firstFragment);
+//        transaction.commit();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(MainFragment.newInstance(), "Alonso");
+        adapter.addFragment(MainFragment.newInstance(), "Tab One");
         viewPager.setAdapter(adapter);
     }
 
