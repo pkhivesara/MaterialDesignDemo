@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
                 if (isPermissionGranted() && shouldShowRationale()) {
                     drawerLayout.closeDrawers();
-                    showSnackBar(null,R.string.permission_rationale_text,-2);
+                    showSnackBar(null, R.string.permission_rationale_text, -2);
                 } else if ((isPermissionGranted()) && !shouldShowRationale()) {
                     requestReadPhoneStatePermission();
                 } else {
@@ -96,17 +97,17 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     private boolean switchDataSetAsPermissionIsGranted(MenuItem item) {
         item.setChecked(true);
         drawerLayout.closeDrawers();
-        showSnackBar(item, R.string.update_race_and_constructor_list,-1);
+        showSnackBar(item, R.string.update_race_and_constructor_list, -1);
         Intent intent = new Intent(NAV_DRAWER_BROADCAST_RECEIVER);
         intent.putExtra(getString(R.string.year), item.getTitle());
         LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
         return true;
     }
 
-    private void showSnackBar(MenuItem item,int message, int snackBarLength) {
+    private void showSnackBar(MenuItem item, int message, int snackBarLength) {
         Snackbar snackBar;
-        if(item == null){
-            snackBar = Snackbar.make(coordinatorLayout,getString(message),snackBarLength).
+        if (item == null) {
+            snackBar = Snackbar.make(coordinatorLayout, getString(message), snackBarLength).
                     setAction("Ok", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
                     });
 
 
-        }else {
+        } else {
             snackBar = Snackbar.make(coordinatorLayout, getString(message) + item.getTitle(), snackBarLength);
         }
         View textView = snackBar.getView();
@@ -125,8 +126,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     }
 
     @Override
-    public void listItemClicked(int position) {
-
+    public void listItemClicked(int position, View view) {
+        ActivityOptionsCompat transition = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, getString(R.string.activity_image_trans));
+        startActivity(new Intent(this, DetailsActivity.class), transition.toBundle());
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,7 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainFragment extends Fragment implements Constants{
+public class MainFragment extends Fragment implements Constants {
     RecyclerView recyclerView;
     MainFragmentInterface mainFragmentInterface;
 
@@ -61,7 +63,7 @@ public class MainFragment extends Fragment implements Constants{
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver,new IntentFilter(NAV_DRAWER_BROADCAST_RECEIVER));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver, new IntentFilter(NAV_DRAWER_BROADCAST_RECEIVER));
 
 
     }
@@ -81,14 +83,14 @@ public class MainFragment extends Fragment implements Constants{
     }
 
     public interface MainFragmentInterface {
-        void listItemClicked(int position);
+        void listItemClicked(int position,View view);
     }
 
     public static MainFragment newInstance() {
         return new MainFragment();
     }
 
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
 
         List<String> responseList;
 
@@ -97,15 +99,42 @@ public class MainFragment extends Fragment implements Constants{
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
-            return new ViewHolder(v);
+        public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            switch (viewType) {
+                case TYPE_LIST:
+                    View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
+                    return new ListViewHolder(v);
+                case TYPE_HEADER:
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_row, parent, false);
+                    return new HeaderViewHolder(view);
+            }
+            return null;
+
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            String raceName = responseList.get(position);
-            holder.raceNameTextView.setText(raceName);
+        public void onBindViewHolder(MainViewHolder holder, int position) {
+            switch (holder.getItemViewType()) {
+                case TYPE_LIST:
+                    String raceName = responseList.get(position);
+                    ListViewHolder listViewHolder = (ListViewHolder) holder;
+                    listViewHolder.raceNameTextView.setText(raceName);
+                    break;
+                case TYPE_HEADER:
+                    HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+                    headerViewHolder.headerTextView.setText("How I Met Your Mother");
+                    break;
+            }
+        }
+
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == 0) {
+                return TYPE_HEADER;
+            } else {
+                return TYPE_LIST;
+            }
         }
 
         @Override
@@ -113,11 +142,28 @@ public class MainFragment extends Fragment implements Constants{
             return responseList.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public class HeaderViewHolder extends MainViewHolder {
+            TextView headerTextView;
+
+            public HeaderViewHolder(View itemView) {
+                super(itemView);
+                headerTextView = (TextView) itemView.findViewById(R.id.header_text_view);
+            }
+        }
+
+        public class MainViewHolder extends RecyclerView.ViewHolder {
+
+            public MainViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        public class ListViewHolder extends MainViewHolder implements View.OnClickListener {
             TextView raceNameTextView;
 
 
-            public ViewHolder(View itemView) {
+            public ListViewHolder(View itemView) {
                 super(itemView);
                 itemView.setOnClickListener(this);
                 raceNameTextView = (TextView) itemView.findViewById(R.id.raceName);
@@ -126,11 +172,11 @@ public class MainFragment extends Fragment implements Constants{
 
             @Override
             public void onClick(View v) {
-                mainFragmentInterface.listItemClicked(getAdapterPosition());
-                Toast.makeText(getActivity(), "Clicked row is:" + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                mainFragmentInterface.listItemClicked(getAdapterPosition(),v.findViewById(R.id.imageView));
             }
         }
     }
+
 
     BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
         @Override
@@ -158,7 +204,7 @@ public class MainFragment extends Fragment implements Constants{
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray searchArray = jsonObject.getJSONArray("Episodes");
 
-                for(int i = 0;i<searchArray.length();i++){
+                for (int i = 0; i < searchArray.length(); i++) {
                     JSONObject mobileObject = searchArray.getJSONObject(i);
                     String movieTitle = mobileObject.getString("Title");
                     responseList.add(movieTitle);
@@ -173,13 +219,11 @@ public class MainFragment extends Fragment implements Constants{
     }
 
 
-
-
     private String makeServiceCall(String year) {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://www.omdbapi.com/?t=How%20I%20%20Met%20Your%20Mother&Season=1");
+            url = new URL("http://www.omdbapi.com/?t=How%20I%20%20Met%20Your%20Mother&Season="+year);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

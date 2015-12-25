@@ -125,7 +125,7 @@ public class SecondFragment extends Fragment implements Constants {
         recyclerView.setAdapter(myAdapter);
     }
 
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
 
         List<String> responseList;
 
@@ -134,15 +134,40 @@ public class SecondFragment extends Fragment implements Constants {
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
-            return new ViewHolder(v);
+        public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            switch (viewType) {
+                case TYPE_LIST:
+                    View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
+                    return new ListViewHolder(v);
+                case TYPE_HEADER:
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_row, parent, false);
+                    return new HeaderViewHolder(view);
+            }
+            return null;
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            String raceName = responseList.get(position);
-            holder.raceNameTextView.setText(raceName);
+        public void onBindViewHolder(MainViewHolder holder, int position) {
+            switch (holder.getItemViewType()) {
+                case TYPE_LIST:
+                    String raceName = responseList.get(position);
+                    ListViewHolder listViewHolder = (ListViewHolder) holder;
+                    listViewHolder.raceNameTextView.setText(raceName);
+                    break;
+                case TYPE_HEADER:
+                    HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+                    headerViewHolder.headerTextView.setText("Friends");
+                    break;
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == 0) {
+                return TYPE_HEADER;
+            } else {
+                return TYPE_LIST;
+            }
         }
 
         @Override
@@ -150,11 +175,29 @@ public class SecondFragment extends Fragment implements Constants {
             return responseList.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+
+        public class HeaderViewHolder extends MainViewHolder {
+            TextView headerTextView;
+
+            public HeaderViewHolder(View itemView) {
+                super(itemView);
+                headerTextView = (TextView) itemView.findViewById(R.id.header_text_view);
+            }
+        }
+
+        public class MainViewHolder extends RecyclerView.ViewHolder {
+
+            public MainViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        public class ListViewHolder extends MainViewHolder implements View.OnClickListener {
             TextView raceNameTextView;
 
 
-            public ViewHolder(View itemView) {
+            public ListViewHolder(View itemView) {
                 super(itemView);
                 itemView.setOnClickListener(this);
                 raceNameTextView = (TextView) itemView.findViewById(R.id.raceName);
@@ -163,6 +206,7 @@ public class SecondFragment extends Fragment implements Constants {
 
             @Override
             public void onClick(View v) {
+               // mainFragmentInterface.listItemClicked(getAdapterPosition());
                 Toast.makeText(getActivity(), "Clicked row is:" + getAdapterPosition(), Toast.LENGTH_SHORT).show();
             }
         }
@@ -172,7 +216,7 @@ public class SecondFragment extends Fragment implements Constants {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://www.omdbapi.com/?t=House%20of%20Cards&Season=1");
+            url = new URL("http://www.omdbapi.com/?t=Friends&Season="+year);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

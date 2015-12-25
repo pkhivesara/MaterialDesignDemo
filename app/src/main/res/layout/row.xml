@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dip"
         android:id="@+id/imageView"
-        android:src = "@drawable/abc_ic_go_search_api_mtrl_alpha"
+        android:src = "@android:drawable/ic_dialog_map"
+        android:transitionName="@string/activity_image_trans"
         android:layout_alignParentRight="true"/>
 
 
