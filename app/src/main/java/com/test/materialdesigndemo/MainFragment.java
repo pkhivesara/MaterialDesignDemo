@@ -2,9 +2,14 @@ package com.test.materialdesigndemo;
 
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,7 +44,7 @@ public class MainFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerDecoration(getActivity()));
-        new GetAnotherSampleResponse().execute();
+        new GetAnotherSampleResponse().execute("2015");
         return view;
 
     }
@@ -48,6 +53,22 @@ public class MainFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mainFragmentInterface = (MainFragmentInterface) activity;
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver,new IntentFilter("NAV_DRAWER_ITEM_CLICKED"));
+
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(navDrawerClickedReceiver);
+
 
     }
 
@@ -109,7 +130,15 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private class GetAnotherSampleResponse extends AsyncTask<Void, Void, List> {
+    BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String year = intent.getStringExtra("Year");
+            new GetAnotherSampleResponse().execute(year);
+        }
+    };
+
+    private class GetAnotherSampleResponse extends AsyncTask<String, Void, List> {
 
         @Override
         protected void onPostExecute(List list) {
@@ -119,8 +148,9 @@ public class MainFragment extends Fragment {
         }
 
         @Override
-        protected List doInBackground(Void... params) {
-            String response = makeServiceCall();
+        protected List doInBackground(String... params) {
+            String year = params[0];
+            String response = makeServiceCall(year);
             List<String> responseList = new ArrayList<String>();
             try {
                 JSONObject jsonObject = new JSONObject(response);
@@ -158,11 +188,11 @@ public class MainFragment extends Fragment {
 
 
 
-    private String makeServiceCall() {
+    private String makeServiceCall(String year) {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://ergast.com/api/f1/2015/drivers/alonso/qualifying.json");
+            url = new URL("http://ergast.com/api/f1/"+year+"/drivers/alonso/qualifying.json");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -180,7 +210,6 @@ public class MainFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        http://www.crwflags.com/fotw/images/m/my.gif
         return response.toString();
     }
 }

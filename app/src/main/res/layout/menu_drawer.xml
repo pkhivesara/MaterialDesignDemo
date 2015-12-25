@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="wrap_content" android:layout_width="match_parent">
+    <group android:checkableBehavior="single">
+
+    <item
+        android:id="@+id/first1"
+        android:checked="false"
+        android:title="2012" />
+
+    <item
+        android:id="@+id/second2"
+        android:checked="false"
+        android:title="2013" />
+    <item
+        android:id="@+id/third3"
+        android:checked="false"
+        android:title="2014" />
+    </group>
+</menu>

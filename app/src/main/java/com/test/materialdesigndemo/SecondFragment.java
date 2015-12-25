@@ -1,8 +1,13 @@
 package com.test.materialdesigndemo;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,7 +44,7 @@ public class SecondFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerDecoration(getActivity()));
-        new GetSampleResponse().execute();
+        new GetSampleResponse().execute("2015");
         return view;
     }
 
@@ -48,12 +53,13 @@ public class SecondFragment extends Fragment {
     }
 
 
-    private class GetSampleResponse extends AsyncTask<Void, Void, List> {
+    private class GetSampleResponse extends AsyncTask<String, Void, List> {
 
 
         @Override
-        protected List doInBackground(Void... params) {
-            String response = makeServiceCall();
+        protected List doInBackground(String... params) {
+            String year = params[0];
+            String response = makeServiceCall(year);
             List<String> responseList = new ArrayList<String>();
             try {
                 JSONObject jsonObject = new JSONObject(response);
@@ -92,6 +98,31 @@ public class SecondFragment extends Fragment {
         }
 
     }
+
+    BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String year = intent.getStringExtra("Year");
+            new GetSampleResponse().execute(year);
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver,new IntentFilter("NAV_DRAWER_ITEM_CLICKED"));
+
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(navDrawerClickedReceiver);
+
+
+    }
+
 
     private void initializeData(List<String> responseList) {
 
@@ -143,11 +174,11 @@ public class SecondFragment extends Fragment {
         }
     }
 
-    private String makeServiceCall() {
+    private String makeServiceCall(String year) {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://ergast.com/api/f1/2015/constructors.json");
+            url = new URL("http://ergast.com/api/f1/"+year+"/constructors.json");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
