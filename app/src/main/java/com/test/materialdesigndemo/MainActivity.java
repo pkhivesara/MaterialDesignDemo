@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     FrameLayout frameLayout;
     TabLayout tabLayout;
     ViewPager viewPager;
+    DrawerLayout drawerLayout;
+    ActionBar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,13 +33,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         frameLayout = (FrameLayout)findViewById(R.id.frame_layout);
         tabLayout = (TabLayout)findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setSupportActionBar(toolbar);
-//        MainFragment firstFragment = MainFragment.newInstance();
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.add(R.id.frame_layout, firstFragment);
-//        transaction.commit();
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_search);
+
     }
 
     @Override
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(MainFragment.newInstance(), "Tab One");
+        adapter.addFragment(SecondFragment.newInstance(), "Tab Two");
         viewPager.setAdapter(adapter);
     }
 
