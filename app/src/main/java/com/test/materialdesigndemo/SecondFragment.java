@@ -29,9 +29,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Pratik on 12/24/15.
- */
+
 public class SecondFragment extends Fragment {
     RecyclerView recyclerView;
 

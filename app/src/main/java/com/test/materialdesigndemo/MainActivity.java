@@ -1,12 +1,13 @@
 package com.test.materialdesigndemo;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.*;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.*;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -15,13 +16,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface{
+public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface {
     Toolbar toolbar;
     FrameLayout frameLayout;
     TabLayout tabLayout;
@@ -30,19 +33,21 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     ActionBar actionBar;
     NavigationView navigationView;
     CoordinatorLayout coordinatorLayout;
-FloatingActionButton floatingActionButton;
+    FloatingActionButton floatingActionButton;
+    MenuItem menuItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
-        frameLayout = (FrameLayout)findViewById(R.id.frame_layout);
-        tabLayout = (TabLayout)findViewById(R.id.tab_layout);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView)findViewById(R.id.navigation_view);
-        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setSupportActionBar(toolbar);
@@ -53,36 +58,56 @@ FloatingActionButton floatingActionButton;
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
+                menuItem = item;
 
+                if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
+                        && ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_PHONE_STATE)) {
+                    drawerLayout.closeDrawers();
+                    Snackbar.make(coordinatorLayout, "Dummy Permission needed to go ahead", Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
+                        }
+                    }).show();
 
-                item.setChecked(true);
-                drawerLayout.closeDrawers();
-                Snackbar.make(coordinatorLayout,"Updating Race and Constructors List for " + item.getTitle(),Snackbar.LENGTH_LONG).show();
-
-                Intent intent = new Intent("NAV_DRAWER_ITEM_CLICKED");
-                intent.putExtra("Year",item.getTitle());
-                LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
-                return true;
+                } else if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
+                        && !ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_PHONE_STATE)) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
+                } else {
+                    return switchDataSetAsPermissionIsGranted(item);
+                }
+                return false;
             }
         });
 
     }
 
+    private boolean switchDataSetAsPermissionIsGranted(MenuItem item) {
+        item.setChecked(true);
+        drawerLayout.closeDrawers();
+        showSnackBar(item);
+        Intent intent = new Intent("NAV_DRAWER_ITEM_CLICKED");
+        intent.putExtra("Year", item.getTitle());
+        LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
+        return true;
+    }
+
+    private void showSnackBar(MenuItem item) {
+        Snackbar snackBar = Snackbar.make(coordinatorLayout, "Updating Race and Constructors List for " + item.getTitle(), Snackbar.LENGTH_SHORT);
+        View textView = snackBar.getView();
+        TextView tv = (TextView) textView.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(getResources().getColor(R.color.snackBarTextColor));
+        snackBar.show();
+    }
+
     @Override
     public void listItemClicked(int position) {
-//        DetailsFragment detailsFragment = DetailsFragment.newInstance();
-//        Bundle bundle = new Bundle();
-//        bundle.putInt("position",position);
-//        detailsFragment.setArguments(bundle);
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
-//        transaction.replace(R.id.frame_layout, detailsFragment);
-//        transaction.commit();
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
@@ -125,6 +150,19 @@ FloatingActionButton floatingActionButton;
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 0) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                switchDataSetAsPermissionIsGranted(menuItem);
+            } else {
+                drawerLayout.closeDrawers();
+            }
         }
     }
 }
