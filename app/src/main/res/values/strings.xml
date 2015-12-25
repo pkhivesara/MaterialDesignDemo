@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">MaterialDesignDemo</string>
     <string name="hello_world">Hello world!</string>
+    <string name="tab_one">Tab One</string>
+    <string name="tab_two">Tab Two</string>
+    <string name="update_race_and_constructor_list">"Updating Race and Constructors List for "</string>
+    <string name="year_2015">2015</string>
+    <string name="year">Year</string>
+    <string name="permission_rationale_text">Dummy Permission needed to go ahead</string>
 </resources>

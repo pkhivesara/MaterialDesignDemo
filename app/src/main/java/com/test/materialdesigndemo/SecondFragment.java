@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SecondFragment extends Fragment {
+public class SecondFragment extends Fragment implements Constants {
     RecyclerView recyclerView;
 
     @Override
@@ -42,7 +42,7 @@ public class SecondFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerDecoration(getActivity()));
-        new GetSampleResponse().execute("2015");
+        new GetConstructorsList().execute(getString(R.string.year_2015));
         return view;
     }
 
@@ -51,35 +51,31 @@ public class SecondFragment extends Fragment {
     }
 
 
-    private class GetSampleResponse extends AsyncTask<String, Void, List> {
+    private class GetConstructorsList extends AsyncTask<String, Void, List> {
 
 
         @Override
         protected List doInBackground(String... params) {
+
+
+
             String year = params[0];
             String response = makeServiceCall(year);
             List<String> responseList = new ArrayList<String>();
+
+
+
+
             try {
                 JSONObject jsonObject = new JSONObject(response);
-                JSONObject jsonObject1 = jsonObject.getJSONObject("MRData");
-                String total = jsonObject1.getString("total");
-                Log.d("@@@", total);
-                JSONObject constructorTable = jsonObject1.getJSONObject("ConstructorTable");
-                String season = constructorTable.getString("season");
-                Log.d("@@@", season);
-                JSONArray jsonArray = constructorTable.getJSONArray("Constructors");
+                JSONArray searchArray = jsonObject.getJSONArray("Episodes");
 
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject innerObject = jsonArray.getJSONObject(i);
-                    String constructorId = innerObject.getString("constructorId");
-                    Log.d("@@@", constructorId);
-                    String constructorName = innerObject.getString("name");
-                    Log.d("###", constructorName);
-                    String constructorNationality = innerObject.getString("nationality");
-                    responseList.add(constructorName);
+                for(int i = 0;i<searchArray.length();i++){
+                    JSONObject mobileObject = searchArray.getJSONObject(i);
+                    String movieTitle = mobileObject.getString("Title");
+                    responseList.add(movieTitle);
                 }
 
-                Log.d("***", total);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -100,15 +96,16 @@ public class SecondFragment extends Fragment {
     BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String year = intent.getStringExtra("Year");
-            new GetSampleResponse().execute(year);
+            String year = intent.getStringExtra(context.getString(R.string.year));
+            new GetConstructorsList().execute(year);
         }
     };
+
 
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver,new IntentFilter("NAV_DRAWER_ITEM_CLICKED"));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver,new IntentFilter(NAV_DRAWER_BROADCAST_RECEIVER));
 
 
     }
@@ -166,7 +163,6 @@ public class SecondFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                //mainFragmentInterface.listItemClicked(getAdapterPosition());
                 Toast.makeText(getActivity(), "Clicked row is:" + getAdapterPosition(), Toast.LENGTH_SHORT).show();
             }
         }
@@ -176,7 +172,7 @@ public class SecondFragment extends Fragment {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://ergast.com/api/f1/"+year+"/constructors.json");
+            url = new URL("http://www.omdbapi.com/?t=House%20of%20Cards&Season=1");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

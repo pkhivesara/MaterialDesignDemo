@@ -12,11 +12,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
@@ -31,7 +29,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements Constants{
     RecyclerView recyclerView;
     MainFragmentInterface mainFragmentInterface;
 
@@ -40,13 +38,17 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
+        setUpRecyclerView();
+        new GetRaceList().execute(getContext().getString(R.string.year_2015));
+        return view;
+
+    }
+
+    private void setUpRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerDecoration(getActivity()));
-        new GetAnotherSampleResponse().execute("2015");
-        return view;
-
     }
 
     @Override
@@ -59,7 +61,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver,new IntentFilter("NAV_DRAWER_ITEM_CLICKED"));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver,new IntentFilter(NAV_DRAWER_BROADCAST_RECEIVER));
 
 
     }
@@ -133,12 +135,12 @@ public class MainFragment extends Fragment {
     BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String year = intent.getStringExtra("Year");
-            new GetAnotherSampleResponse().execute(year);
+            String year = intent.getStringExtra(context.getString(R.string.year));
+            new GetRaceList().execute(year);
         }
     };
 
-    private class GetAnotherSampleResponse extends AsyncTask<String, Void, List> {
+    private class GetRaceList extends AsyncTask<String, Void, List> {
 
         @Override
         protected void onPostExecute(List list) {
@@ -154,27 +156,12 @@ public class MainFragment extends Fragment {
             List<String> responseList = new ArrayList<String>();
             try {
                 JSONObject jsonObject = new JSONObject(response);
-                JSONObject mrData = jsonObject.getJSONObject("MRData");
-                String url = mrData.getString("url");
-                JSONObject raceTable = mrData.getJSONObject("RaceTable");
-                String season = raceTable.getString("season");
-                String driverId = raceTable.getString("driverId");
-                JSONArray raceArray = raceTable.getJSONArray("Races");
-                for (int i = 0; i < raceArray.length(); i++) {
-                    JSONObject jsonObject1 = raceArray.getJSONObject(i);
-                    String round = jsonObject1.getString("round");
-                    String raceName = jsonObject1.getString("raceName");
-                    responseList.add(raceName);
-                    JSONObject circuit = jsonObject1.getJSONObject("Circuit");
-                    JSONObject location = circuit.getJSONObject("Location");
-                    JSONArray quali = jsonObject1.getJSONArray("QualifyingResults");
+                JSONArray searchArray = jsonObject.getJSONArray("Episodes");
 
-                    for (int j = 0; j < quali.length(); j++) {
-                        JSONObject innerObject = quali.getJSONObject(j);
-                        String position = innerObject.getString("position");
-                        String Q1 = innerObject.getString("Q1");
-                    }
-
+                for(int i = 0;i<searchArray.length();i++){
+                    JSONObject mobileObject = searchArray.getJSONObject(i);
+                    String movieTitle = mobileObject.getString("Title");
+                    responseList.add(movieTitle);
                 }
 
 
@@ -192,7 +179,7 @@ public class MainFragment extends Fragment {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://ergast.com/api/f1/"+year+"/drivers/alonso/qualifying.json");
+            url = new URL("http://www.omdbapi.com/?t=How%20I%20%20Met%20Your%20Mother&Season=1");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

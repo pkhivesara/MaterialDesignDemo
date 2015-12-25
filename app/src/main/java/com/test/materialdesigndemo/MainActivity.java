@@ -19,12 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface {
+public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface, Constants {
     Toolbar toolbar;
     FrameLayout frameLayout;
     TabLayout tabLayout;
@@ -40,39 +38,21 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        initializeUIElements();
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-        setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_search);
+        toolBarSetup();
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 menuItem = item;
 
-                if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
-                        && ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_PHONE_STATE)) {
+                if (isPermissionGranted() && shouldShowRationale()) {
                     drawerLayout.closeDrawers();
-                    Snackbar.make(coordinatorLayout, "Dummy Permission needed to go ahead", Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
-                        }
-                    }).show();
-
-                } else if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
-                        && !ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_PHONE_STATE)) {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
+                    showSnackBar(null,R.string.permission_rationale_text,-2);
+                } else if ((isPermissionGranted()) && !shouldShowRationale()) {
+                    requestReadPhoneStatePermission();
                 } else {
                     return switchDataSetAsPermissionIsGranted(item);
                 }
@@ -82,18 +62,62 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     }
 
+    private void requestReadPhoneStatePermission() {
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE_PERMISSION_ID);
+    }
+
+
+    private boolean isPermissionGranted() {
+        return ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean shouldShowRationale() {
+        return ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_PHONE_STATE);
+    }
+
+    private void toolBarSetup() {
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_search);
+    }
+
+    private void initializeUIElements() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+    }
+
     private boolean switchDataSetAsPermissionIsGranted(MenuItem item) {
         item.setChecked(true);
         drawerLayout.closeDrawers();
-        showSnackBar(item);
-        Intent intent = new Intent("NAV_DRAWER_ITEM_CLICKED");
-        intent.putExtra("Year", item.getTitle());
+        showSnackBar(item, R.string.update_race_and_constructor_list,-1);
+        Intent intent = new Intent(NAV_DRAWER_BROADCAST_RECEIVER);
+        intent.putExtra(getString(R.string.year), item.getTitle());
         LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
         return true;
     }
 
-    private void showSnackBar(MenuItem item) {
-        Snackbar snackBar = Snackbar.make(coordinatorLayout, "Updating Race and Constructors List for " + item.getTitle(), Snackbar.LENGTH_SHORT);
+    private void showSnackBar(MenuItem item,int message, int snackBarLength) {
+        Snackbar snackBar;
+        if(item == null){
+            snackBar = Snackbar.make(coordinatorLayout,getString(message),snackBarLength).
+                    setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestReadPhoneStatePermission();
+                        }
+                    });
+
+
+        }else {
+            snackBar = Snackbar.make(coordinatorLayout, getString(message) + item.getTitle(), snackBarLength);
+        }
         View textView = snackBar.getView();
         TextView tv = (TextView) textView.findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(getResources().getColor(R.color.snackBarTextColor));
@@ -118,15 +142,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(MainFragment.newInstance(), "Tab One");
-        adapter.addFragment(SecondFragment.newInstance(), "Tab Two");
+        adapter.addFragment(MainFragment.newInstance(), getString(R.string.tab_one));
+        adapter.addFragment(SecondFragment.newInstance(), getString(R.string.tab_two));
         viewPager.setAdapter(adapter);
     }
 
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+        private final List<Fragment> fragmentList = new ArrayList<>();
+        private final List<String> fragmentTitleList = new ArrayList<>();
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
@@ -134,22 +158,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
         @Override
         public Fragment getItem(int position) {
-            return mFragmentList.get(position);
+            return fragmentList.get(position);
         }
 
         @Override
         public int getCount() {
-            return mFragmentList.size();
+            return fragmentList.size();
         }
 
         public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
+            fragmentList.add(fragment);
+            fragmentTitleList.add(title);
         }
+
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+            return fragmentTitleList.get(position);
         }
     }
 
@@ -157,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == 0) {
+        if (requestCode == READ_PHONE_STATE_PERMISSION_ID) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 switchDataSetAsPermissionIsGranted(menuItem);
             } else {
@@ -165,4 +190,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
             }
         }
     }
+
+
 }
