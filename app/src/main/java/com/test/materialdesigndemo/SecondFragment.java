@@ -150,7 +150,7 @@ public class SecondFragment extends Fragment implements Constants {
         public void onBindViewHolder(MainViewHolder holder, int position) {
             switch (holder.getItemViewType()) {
                 case TYPE_LIST:
-                    String raceName = responseList.get(position);
+                    String raceName = responseList.get(position-1);
                     ListViewHolder listViewHolder = (ListViewHolder) holder;
                     listViewHolder.raceNameTextView.setText(raceName);
                     break;
@@ -172,7 +172,7 @@ public class SecondFragment extends Fragment implements Constants {
 
         @Override
         public int getItemCount() {
-            return responseList.size();
+            return responseList.size() + 1;
         }
 
 

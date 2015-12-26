@@ -8,5 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/header_text_view"
+        android:textColor="#009688"
+        android:layout_margin="10dip"
+        android:textSize="18sp"
         android:layout_gravity="center_horizontal"/>
 </LinearLayout>
