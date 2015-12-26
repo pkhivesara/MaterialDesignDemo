@@ -4,15 +4,15 @@
     <item
         android:id="@+id/first1"
         android:checked="false"
-        android:title="5" />
+        android:title="@string/season_five" />
 
     <item
         android:id="@+id/second2"
         android:checked="false"
-        android:title="6" />
+        android:title="@string/string_six" />
     <item
         android:id="@+id/third3"
         android:checked="false"
-        android:title="7" />
+        android:title="@string/season_seven" />
     </group>
 </menu>

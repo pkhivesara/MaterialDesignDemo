@@ -99,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         drawerLayout.closeDrawers();
         showSnackBar(item, R.string.update_race_and_constructor_list, -1);
         Intent intent = new Intent(NAV_DRAWER_BROADCAST_RECEIVER);
-        intent.putExtra(getString(R.string.year), item.getTitle());
+        String season = String.valueOf(item.getTitle().charAt(item.getTitle().length()-1));
+        intent.putExtra(getString(R.string.year), season);
         LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
         return true;
     }
