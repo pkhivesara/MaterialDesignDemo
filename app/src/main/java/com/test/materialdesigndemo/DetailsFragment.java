@@ -3,6 +3,9 @@ package com.test.materialdesigndemo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +24,9 @@ import java.util.List;
 
 public class DetailsFragment extends Fragment {
 
-    TextView raceNumberTextView;
+    TextView detailsCardTitleTextView;
+    TextView detailsCardDirectorTextView;
+    TextView detailsCardReleasedTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,21 +34,24 @@ public class DetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
         String episode = getArguments().getString("episode");
         String title = getArguments().getString("title");
-        raceNumberTextView = (TextView) view.findViewById(R.id.raceNumberTextView);
-        new GetIndividualEpisodeData().execute(episode,title);
-        raceNumberTextView.setText(episode);
+        detailsCardDirectorTextView = (TextView)view.findViewById(R.id.detailsCardDirectorTextView);
+        detailsCardTitleTextView = (TextView)view.findViewById(R.id.detailsCardTitleTextView);
+        detailsCardReleasedTextView = (TextView)view.findViewById(R.id.detailsCardReleasedTextView);
+
+        new GetIndividualEpisodeData().execute(episode, title);
         return view;
 
     }
 
 
-    public class GetIndividualEpisodeData extends AsyncTask<String, Void, IndividualEpisodeData> {
 
+    public class GetIndividualEpisodeData extends AsyncTask<String, Void, IndividualEpisodeData> {
         @Override
         protected void onPostExecute(IndividualEpisodeData individualEpisodeData) {
             super.onPostExecute(individualEpisodeData);
-            raceNumberTextView.setText(individualEpisodeData.director + individualEpisodeData.title);
-
+            detailsCardDirectorTextView.setText(individualEpisodeData.director);
+            detailsCardTitleTextView.setText(individualEpisodeData.title);
+            detailsCardReleasedTextView.setText(individualEpisodeData.released);
         }
 
         @Override
@@ -59,6 +67,7 @@ public class DetailsFragment extends Fragment {
                 individualEpisodeData.director = jsonObject.getString("Director");
             } catch (JSONException e) {
                 e.printStackTrace();
+                Log.d("###",e.getMessage());
 
             }
             return individualEpisodeData;
@@ -66,6 +75,7 @@ public class DetailsFragment extends Fragment {
         }
 
     }
+
 
 
     public String makeServiceCall(String episodeNumber, String title) {
