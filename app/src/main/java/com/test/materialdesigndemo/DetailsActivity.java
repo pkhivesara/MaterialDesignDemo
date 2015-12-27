@@ -14,7 +14,11 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.container_layout,DetailsFragment.newInstance());
+        DetailsFragment detailsFragment = DetailsFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putString("episode",getIntent().getStringExtra("episode"));
+        detailsFragment.setArguments(bundle);
+        fragmentTransaction.add(R.id.container_layout,detailsFragment);
         fragmentTransaction.commit();
 
     }

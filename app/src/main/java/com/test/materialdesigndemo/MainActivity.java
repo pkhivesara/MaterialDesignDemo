@@ -128,8 +128,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     @Override
     public void listItemClicked(int position, View view) {
+        Intent intent = new Intent(this,DetailsActivity.class);
+        intent.putExtra("episode", Integer.toString(position));
         ActivityOptionsCompat transition = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, getString(R.string.activity_image_trans));
-        startActivity(new Intent(this, DetailsActivity.class), transition.toBundle());
+        startActivity(intent, transition.toBundle());
     }
 
     @Override

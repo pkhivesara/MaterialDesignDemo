@@ -16,7 +16,9 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
+        String episode  = getArguments().getString("episode");
         raceNumberTextView = (TextView) view.findViewById(R.id.raceNumberTextView);
+        raceNumberTextView.setText(episode);
         return view;
 
     }

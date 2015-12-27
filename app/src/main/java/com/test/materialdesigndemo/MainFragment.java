@@ -224,7 +224,7 @@ public class MainFragment extends Fragment implements Constants {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://www.omdbapi.com/?t=How%20I%20%20Met%20Your%20Mother&Season="+year);
+            url = new URL("http://www.omdbapi.com/?t=How&I&Met&Your&Mother&Season="+year);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
