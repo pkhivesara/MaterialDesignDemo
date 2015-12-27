@@ -1,5 +1,6 @@
 package com.test.materialdesigndemo;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import java.util.List;
 
 public class SecondFragment extends Fragment implements Constants {
     RecyclerView recyclerView;
+    SecondFragmentInterface secondFragmentInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +48,13 @@ public class SecondFragment extends Fragment implements Constants {
         return view;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        secondFragmentInterface = (SecondFragmentInterface) activity;
+
+    }
+
     public static SecondFragment newInstance() {
         return new SecondFragment();
     }
@@ -58,19 +67,16 @@ public class SecondFragment extends Fragment implements Constants {
         protected List doInBackground(String... params) {
 
 
-
             String year = params[0];
             String response = makeServiceCall(year);
             List<String> responseList = new ArrayList<String>();
-
-
 
 
             try {
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray searchArray = jsonObject.getJSONArray("Episodes");
 
-                for(int i = 0;i<searchArray.length();i++){
+                for (int i = 0; i < searchArray.length(); i++) {
                     JSONObject mobileObject = searchArray.getJSONObject(i);
                     String movieTitle = mobileObject.getString("Title");
                     responseList.add(movieTitle);
@@ -105,7 +111,7 @@ public class SecondFragment extends Fragment implements Constants {
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver,new IntentFilter(NAV_DRAWER_BROADCAST_RECEIVER));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver, new IntentFilter(NAV_DRAWER_BROADCAST_RECEIVER));
 
 
     }
@@ -150,7 +156,7 @@ public class SecondFragment extends Fragment implements Constants {
         public void onBindViewHolder(MainViewHolder holder, int position) {
             switch (holder.getItemViewType()) {
                 case TYPE_LIST:
-                    String raceName = responseList.get(position-1);
+                    String raceName = responseList.get(position - 1);
                     ListViewHolder listViewHolder = (ListViewHolder) holder;
                     listViewHolder.raceNameTextView.setText(raceName);
                     break;
@@ -174,7 +180,6 @@ public class SecondFragment extends Fragment implements Constants {
         public int getItemCount() {
             return responseList.size() + 1;
         }
-
 
 
         public class HeaderViewHolder extends MainViewHolder {
@@ -206,8 +211,7 @@ public class SecondFragment extends Fragment implements Constants {
 
             @Override
             public void onClick(View v) {
-               // mainFragmentInterface.listItemClicked(getAdapterPosition());
-                Toast.makeText(getActivity(), "Clicked row is:" + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                secondFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.imageView), "Friends");
             }
         }
     }
@@ -216,7 +220,7 @@ public class SecondFragment extends Fragment implements Constants {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://www.omdbapi.com/?t=Friends&Season="+year);
+            url = new URL("http://www.omdbapi.com/?t=Friends&Season=" + year);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -235,5 +239,9 @@ public class SecondFragment extends Fragment implements Constants {
             e.printStackTrace();
         }
         return response.toString();
+    }
+
+    public interface SecondFragmentInterface {
+        void listItemClicked(int position, View view, String title);
     }
 }

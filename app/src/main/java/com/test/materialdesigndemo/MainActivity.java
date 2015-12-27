@@ -23,7 +23,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface, Constants {
+public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface, SecondFragment.SecondFragmentInterface, Constants {
     Toolbar toolbar;
     FrameLayout frameLayout;
     TabLayout tabLayout;
@@ -127,9 +127,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     }
 
     @Override
-    public void listItemClicked(int position, View view) {
+    public void listItemClicked(int position, View view,String title) {
         Intent intent = new Intent(this,DetailsActivity.class);
         intent.putExtra("episode", Integer.toString(position));
+        intent.putExtra("title", title);
         ActivityOptionsCompat transition = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, getString(R.string.activity_image_trans));
         startActivity(intent, transition.toBundle());
     }

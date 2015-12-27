@@ -83,7 +83,7 @@ public class MainFragment extends Fragment implements Constants {
     }
 
     public interface MainFragmentInterface {
-        void listItemClicked(int position,View view);
+        void listItemClicked(int position,View view,String title);
     }
 
     public static MainFragment newInstance() {
@@ -173,7 +173,7 @@ public class MainFragment extends Fragment implements Constants {
 
             @Override
             public void onClick(View v) {
-                mainFragmentInterface.listItemClicked(getAdapterPosition(),v.findViewById(R.id.imageView));
+                mainFragmentInterface.listItemClicked(getAdapterPosition(),v.findViewById(R.id.imageView),"How");
             }
         }
     }
