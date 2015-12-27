@@ -34,6 +34,7 @@ import java.util.List;
 public class MainFragment extends Fragment implements Constants {
     RecyclerView recyclerView;
     MainFragmentInterface mainFragmentInterface;
+    String season;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +84,7 @@ public class MainFragment extends Fragment implements Constants {
     }
 
     public interface MainFragmentInterface {
-        void listItemClicked(int position,View view,String title);
+        void listItemClicked(int position,View view,String title,String season);
     }
 
     public static MainFragment newInstance() {
@@ -173,7 +174,7 @@ public class MainFragment extends Fragment implements Constants {
 
             @Override
             public void onClick(View v) {
-                mainFragmentInterface.listItemClicked(getAdapterPosition(),v.findViewById(R.id.imageView),"How");
+                mainFragmentInterface.listItemClicked(getAdapterPosition(),v.findViewById(R.id.imageView),"How",season);
             }
         }
     }
@@ -183,6 +184,7 @@ public class MainFragment extends Fragment implements Constants {
         @Override
         public void onReceive(Context context, Intent intent) {
             String year = intent.getStringExtra(context.getString(R.string.year));
+            season = year;
             new GetRaceList().execute(year);
         }
     };

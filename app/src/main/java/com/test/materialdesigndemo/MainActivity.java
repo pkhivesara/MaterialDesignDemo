@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         drawerLayout.closeDrawers();
         showSnackBar(item, R.string.update_race_and_constructor_list, -1);
         Intent intent = new Intent(NAV_DRAWER_BROADCAST_RECEIVER);
-        String season = String.valueOf(item.getTitle().charAt(item.getTitle().length()-1));
+        String season = String.valueOf(item.getTitle().charAt(item.getTitle().length() - 1));
         intent.putExtra(getString(R.string.year), season);
         LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
         return true;
@@ -127,10 +127,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     }
 
     @Override
-    public void listItemClicked(int position, View view,String title) {
-        Intent intent = new Intent(this,DetailsActivity.class);
+    public void listItemClicked(int position, View view, String title, String season) {
+        Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("episode", Integer.toString(position));
         intent.putExtra("title", title);
+        intent.putExtra("season", season);
         ActivityOptionsCompat transition = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, getString(R.string.activity_image_trans));
         startActivity(intent, transition.toBundle());
     }
@@ -191,11 +192,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         if (requestCode == READ_PHONE_STATE_PERMISSION_ID) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 switchDataSetAsPermissionIsGranted(menuItem);
+            } else if (shouldShowRationale()) {
+                drawerLayout.closeDrawers();
+
             } else {
                 drawerLayout.closeDrawers();
+                Snackbar.make(coordinatorLayout, "Never ask again", Snackbar.LENGTH_SHORT).show();
             }
         }
     }
-
-
 }
+
+
+

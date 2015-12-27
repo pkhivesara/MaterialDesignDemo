@@ -1,11 +1,19 @@
 package com.test.materialdesigndemo;
 
-/**
- * Created by Pratik on 12/26/15.
- */
+
 public class IndividualEpisodeData {
 
     String title;
+    String year;
+    String rated;
     String released;
+    String season;
+    String episode;
+    String runtime;
+    String genre;
     String director;
+    String writer;
+    String actors;
+    String plot;
+    String imdbRating;
 }

@@ -34,15 +34,15 @@ public class DetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
         String episode = getArguments().getString("episode");
         String title = getArguments().getString("title");
-        detailsCardDirectorTextView = (TextView)view.findViewById(R.id.detailsCardDirectorTextView);
-        detailsCardTitleTextView = (TextView)view.findViewById(R.id.detailsCardTitleTextView);
-        detailsCardReleasedTextView = (TextView)view.findViewById(R.id.detailsCardReleasedTextView);
+        String season = getArguments().getString("season");
+        detailsCardDirectorTextView = (TextView) view.findViewById(R.id.detailsCardDirectorTextView);
+        detailsCardTitleTextView = (TextView) view.findViewById(R.id.detailsCardTitleTextView);
+        detailsCardReleasedTextView = (TextView) view.findViewById(R.id.detailsCardReleasedTextView);
 
-        new GetIndividualEpisodeData().execute(episode, title);
+        new GetIndividualEpisodeData().execute(season, episode, title);
         return view;
 
     }
-
 
 
     public class GetIndividualEpisodeData extends AsyncTask<String, Void, IndividualEpisodeData> {
@@ -57,17 +57,28 @@ public class DetailsFragment extends Fragment {
         @Override
         protected IndividualEpisodeData doInBackground(String... params) {
             IndividualEpisodeData individualEpisodeData = new IndividualEpisodeData();
-            String episodeNumber = params[0];
-            String title = params[1];
-            String response = makeServiceCall(episodeNumber, title);
+            String episodeNumber = params[1];
+            String title = params[2];
+            String season = params[0];
+            String response = makeServiceCall(season, episodeNumber, title);
             try {
                 JSONObject jsonObject = new JSONObject(response);
                 individualEpisodeData.title = jsonObject.getString("Title");
+                individualEpisodeData.year = jsonObject.getString("Year");
+                individualEpisodeData.rated = jsonObject.getString("Rated");
                 individualEpisodeData.released = jsonObject.getString("Released");
+                individualEpisodeData.season = jsonObject.getString("Season");
+                individualEpisodeData.episode = jsonObject.getString("Episode");
+                individualEpisodeData.runtime = jsonObject.getString("Runtime");
+                individualEpisodeData.genre = jsonObject.getString("Genre");
                 individualEpisodeData.director = jsonObject.getString("Director");
+                individualEpisodeData.writer = jsonObject.getString("Writer");
+                individualEpisodeData.actors = jsonObject.getString("Actors");
+                individualEpisodeData.plot = jsonObject.getString("Plot");
+                individualEpisodeData.imdbRating = jsonObject.getString("imdbRating");
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.d("###",e.getMessage());
+                Log.d("###", e.getMessage());
 
             }
             return individualEpisodeData;
@@ -77,16 +88,17 @@ public class DetailsFragment extends Fragment {
     }
 
 
-
-    public String makeServiceCall(String episodeNumber, String title) {
-
+    public String makeServiceCall(String season, String episodeNumber, String title) {
+        if (season == null) {
+            season = "1";
+        }
         StringBuffer response = null;
         URL url = null;
         String urlValue;
         if (title.equalsIgnoreCase("friends")) {
-            urlValue = "http://www.omdbapi.com/?t=Friends&Season=1&episode=" + episodeNumber;
+            urlValue = "http://www.omdbapi.com/?t=Friends&Season=" + season + "&episode=" + episodeNumber;
         } else {
-            urlValue = "http://www.omdbapi.com/?t=How&I&Met&Your&Mother&Season=1&episode=" + episodeNumber;
+            urlValue = "http://www.omdbapi.com/?t=How&I&Met&Your&Mother&Season=" + season + "&episode=" + episodeNumber;
         }
         try {
             url = new URL(urlValue);
