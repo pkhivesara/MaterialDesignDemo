@@ -1,8 +1,10 @@
 package com.test.materialdesigndemo;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,6 +55,9 @@ public class DetailsFragment extends Fragment {
             detailsCardDirectorTextView.setText(individualEpisodeData.director);
             detailsCardTitleTextView.setText(individualEpisodeData.title);
             detailsCardReleasedTextView.setText(individualEpisodeData.released);
+            Intent intent = new Intent("LOAD_COMPLETE");
+            intent.putExtra("url",individualEpisodeData.poster);
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
         }
 
         @Override
@@ -76,6 +82,7 @@ public class DetailsFragment extends Fragment {
                 individualEpisodeData.actors = jsonObject.getString("Actors");
                 individualEpisodeData.plot = jsonObject.getString("Plot");
                 individualEpisodeData.imdbRating = jsonObject.getString("imdbRating");
+                individualEpisodeData.poster = jsonObject.getString("Poster");
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.d("###", e.getMessage());

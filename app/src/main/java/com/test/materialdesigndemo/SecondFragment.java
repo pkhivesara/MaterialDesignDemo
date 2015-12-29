@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +44,7 @@ public class SecondFragment extends Fragment implements Constants {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerDecoration(getActivity()));
-        new GetConstructorsList().execute(getString(R.string.year_2015));
+        new GetConstructorsList().execute(getString(R.string.season_one));
         return view;
     }
 
@@ -103,7 +102,7 @@ public class SecondFragment extends Fragment implements Constants {
     BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String year = intent.getStringExtra(context.getString(R.string.year));
+            String year = intent.getStringExtra(context.getString(R.string.season));
             season = year;
             new GetConstructorsList().execute(year);
         }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v4.content.ContextCompat;
@@ -12,8 +13,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.*;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface, SecondFragment.SecondFragmentInterface, Constants {
+
+
+
     Toolbar toolbar;
     FrameLayout frameLayout;
     TabLayout tabLayout;
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     CoordinatorLayout coordinatorLayout;
     FloatingActionButton floatingActionButton;
     MenuItem menuItem;
+    android.support.v7.app.ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        actionBarDrawerToggle.syncState();
+    }
+
     private void requestReadPhoneStatePermission() {
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE_PERMISSION_ID);
     }
@@ -80,7 +91,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_search);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.permission_rationale_text,R.string.permission_rationale_text);
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
     }
 
     private void initializeUIElements() {
@@ -97,10 +110,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     private boolean switchDataSetAsPermissionIsGranted(MenuItem item) {
         item.setChecked(true);
         drawerLayout.closeDrawers();
-        showSnackBar(item, R.string.update_race_and_constructor_list, -1);
+        showSnackBar(item, R.string.update_episode_list, -1);
         Intent intent = new Intent(NAV_DRAWER_BROADCAST_RECEIVER);
         String season = String.valueOf(item.getTitle().charAt(item.getTitle().length() - 1));
-        intent.putExtra(getString(R.string.year), season);
+        intent.putExtra(getString(R.string.season), season);
         LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
         return true;
     }

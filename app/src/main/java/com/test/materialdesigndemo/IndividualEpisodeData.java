@@ -16,4 +16,5 @@ public class IndividualEpisodeData {
     String actors;
     String plot;
     String imdbRating;
+    String poster;
 }

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +40,7 @@ public class MainFragment extends Fragment implements Constants {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
         setUpRecyclerView();
-        new GetRaceList().execute(getContext().getString(R.string.year_2015));
+        new GetRaceList().execute(getContext().getString(R.string.season_one));
         return view;
 
     }
@@ -183,7 +181,7 @@ public class MainFragment extends Fragment implements Constants {
     BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String year = intent.getStringExtra(context.getString(R.string.year));
+            String year = intent.getStringExtra(context.getString(R.string.season));
             season = year;
             new GetRaceList().execute(year);
         }

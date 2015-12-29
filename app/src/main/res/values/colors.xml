@@ -5,4 +5,5 @@
     <color name = "textColorPrimary">#FFFFFF</color>
     <color name = "windowBackground">#FFFFFF</color>
     <color name = "snackBarTextColor">#009688</color>
+    <color name = "yellow">#fff199</color>
 </resources>
