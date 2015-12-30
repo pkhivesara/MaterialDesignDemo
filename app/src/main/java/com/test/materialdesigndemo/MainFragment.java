@@ -15,7 +15,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,6 +120,8 @@ public class MainFragment extends Fragment implements Constants {
                     String raceName = responseList.get(position-1);
                     ListViewHolder listViewHolder = (ListViewHolder) holder;
                     listViewHolder.raceNameTextView.setText(raceName);
+                    listViewHolder.thumbNailImageView.setImageResource(android.R.drawable.ic_dialog_map);
+                    //Picasso.with(getActivity()).load(R.drawable.ic_himym_1).into(listViewHolder.thumbNailImageView);
                     break;
                 case TYPE_HEADER:
                     HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
@@ -161,18 +165,20 @@ public class MainFragment extends Fragment implements Constants {
 
         public class ListViewHolder extends MainViewHolder implements View.OnClickListener {
             TextView raceNameTextView;
+            ImageView thumbNailImageView;
 
 
             public ListViewHolder(View itemView) {
                 super(itemView);
                 itemView.setOnClickListener(this);
                 raceNameTextView = (TextView) itemView.findViewById(R.id.raceName);
+                thumbNailImageView = (ImageView) itemView.findViewById(R.id.thumbNailImageView);
 
             }
 
             @Override
             public void onClick(View v) {
-                mainFragmentInterface.listItemClicked(getAdapterPosition(),v.findViewById(R.id.imageView),"How",season);
+                mainFragmentInterface.listItemClicked(getAdapterPosition(),v.findViewById(R.id.thumbNailImageView),"How",season);
             }
         }
     }

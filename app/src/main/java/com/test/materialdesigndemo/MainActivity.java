@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.*;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.*;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -19,13 +20,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.oguzdev.circularfloatingactionmenu.library.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface, SecondFragment.SecondFragmentInterface, Constants {
-
+public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface, SecondFragment.SecondFragmentInterface, Constants, View.OnClickListener {
 
 
     Toolbar toolbar;
@@ -36,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     ActionBar actionBar;
     NavigationView navigationView;
     CoordinatorLayout coordinatorLayout;
-    FloatingActionButton floatingActionButton;
     MenuItem menuItem;
     android.support.v7.app.ActionBarDrawerToggle actionBarDrawerToggle;
 
@@ -66,7 +68,61 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
             }
         });
 
+
     }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        setUpCircularFAB();
+    }
+
+    private void setUpCircularFAB() {
+        ImageView icon = new ImageView(this); // Create an icon
+        icon.setImageResource(R.drawable.ic_action_new);
+
+        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new
+                com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(this)
+                .setContentView(icon).setBackgroundDrawable(R.drawable.selector_fab)
+                .build();
+
+
+        /*Expanded Notification Setup */
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
+        ImageView itemIcon = new ImageView(this);
+        itemIcon.setImageResource(android.R.drawable.arrow_down_float);
+
+        SubActionButton expandedNotification = itemBuilder.setContentView(itemIcon).build();
+        expandedNotification.setOnClickListener(this);
+        expandedNotification.setTag(TAG_EXPANDED_NOTIFICATION);
+
+        /*Actionable Notification Setup */
+        SubActionButton.Builder actionableNotificationBuilder = new SubActionButton.Builder(this);
+        ImageView actionableNotificationIcon = new ImageView(this);
+        itemIcon.setImageResource(android.R.drawable.arrow_down_float);
+
+        SubActionButton actionableNotification = actionableNotificationBuilder.setContentView(actionableNotificationIcon).build();
+        actionableNotification.setOnClickListener(this);
+        actionableNotification.setTag(TAG_ACTIONABLE_NOTIFICATION);
+
+        /*Priority Notification Setup */
+        SubActionButton.Builder priorityNotificationBuilder = new SubActionButton.Builder(this);
+        ImageView priorityNotificationIcon = new ImageView(this);
+        itemIcon.setImageResource(android.R.drawable.arrow_down_float);
+
+        SubActionButton priorityNotification = priorityNotificationBuilder.setContentView(priorityNotificationIcon).build();
+        priorityNotification.setOnClickListener(this);
+        priorityNotification.setTag(TAG_PRIORITY_NOTIFICATION);
+
+        new FloatingActionMenu.Builder(this)
+                .addSubActionView(expandedNotification)
+                .addSubActionView(actionableNotification)
+                .addSubActionView(priorityNotification)
+                .attachTo(actionButton)
+                .build();
+    }
+
+
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -91,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.permission_rationale_text,R.string.permission_rationale_text);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.permission_rationale_text, R.string.permission_rationale_text);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
     }
@@ -104,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
     }
 
     private boolean switchDataSetAsPermissionIsGranted(MenuItem item) {
@@ -165,6 +220,22 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         adapter.addFragment(MainFragment.newInstance(), getString(R.string.tab_one));
         adapter.addFragment(SecondFragment.newInstance(), getString(R.string.tab_two));
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch ((String)v.getTag()) {
+            case TAG_ACTIONABLE_NOTIFICATION:
+                Toast.makeText(this,"action",Toast.LENGTH_SHORT).show();
+                break;
+            case TAG_EXPANDED_NOTIFICATION:
+                Toast.makeText(this,"expanded",Toast.LENGTH_SHORT).show();
+                break;
+            case TAG_PRIORITY_NOTIFICATION:
+                Toast.makeText(this,"priority",Toast.LENGTH_SHORT).show();
+                break;
+
+        }
     }
 
 

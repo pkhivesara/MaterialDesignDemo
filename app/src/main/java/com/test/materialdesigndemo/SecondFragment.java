@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -160,6 +161,7 @@ public class SecondFragment extends Fragment implements Constants {
                     String raceName = responseList.get(position - 1);
                     ListViewHolder listViewHolder = (ListViewHolder) holder;
                     listViewHolder.raceNameTextView.setText(raceName);
+                 //   listViewHolder.thumbnailImageView.setImageResource(R.drawable.ic_himym);
                     break;
                 case TYPE_HEADER:
                     HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
@@ -201,18 +203,20 @@ public class SecondFragment extends Fragment implements Constants {
 
         public class ListViewHolder extends MainViewHolder implements View.OnClickListener {
             TextView raceNameTextView;
+            ImageView thumbnailImageView;
 
 
             public ListViewHolder(View itemView) {
                 super(itemView);
                 itemView.setOnClickListener(this);
                 raceNameTextView = (TextView) itemView.findViewById(R.id.raceName);
+                thumbnailImageView = (ImageView) itemView.findViewById(R.id.thumbNailImageView);
 
             }
 
             @Override
             public void onClick(View v) {
-                secondFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.imageView), "Friends",season);
+                secondFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "Friends",season);
             }
         }
     }

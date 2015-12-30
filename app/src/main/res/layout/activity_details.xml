@@ -31,7 +31,6 @@
     android:scaleType="centerCrop"
     android:fitsSystemWindows="true"
     android:transitionName="@string/activity_image_trans"
-    android:background="@android:drawable/ic_dialog_map"
     app:layout_collapseMode="parallax"/>
 
     <android.support.v7.widget.Toolbar
