@@ -27,10 +27,12 @@ import java.util.List;
 
 public class DetailsFragment extends Fragment {
 
-    TextView detailsCardTitleTextView;
+    TextView detailsCardWritersTextView;
     TextView detailsCardDirectorTextView;
     TextView detailsCardReleasedTextView;
     TextView detailsCardPlotTextView;
+    TextView detailsCardTitleNameTextView;
+    TextView imdbRatingTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,9 +42,11 @@ public class DetailsFragment extends Fragment {
         String title = getArguments().getString("title");
         String season = getArguments().getString("season");
         detailsCardDirectorTextView = (TextView) view.findViewById(R.id.detailsCardDirectorTextView);
-        detailsCardTitleTextView = (TextView) view.findViewById(R.id.detailsCardTitleTextView);
+        detailsCardWritersTextView = (TextView) view.findViewById(R.id.detailsCardWritersTextView);
         detailsCardReleasedTextView = (TextView) view.findViewById(R.id.detailsCardReleasedTextView);
         detailsCardPlotTextView = (TextView) view.findViewById(R.id.detailsCardPlotTextView);
+        detailsCardTitleNameTextView = (TextView) view.findViewById(R.id.detailsCardTitleNameTextView);
+        imdbRatingTextView = (TextView) view.findViewById(R.id.imdbRatingTextView);
 
         new GetIndividualEpisodeData().execute(season, episode, title);
         return view;
@@ -54,10 +58,12 @@ public class DetailsFragment extends Fragment {
         @Override
         protected void onPostExecute(IndividualEpisodeData individualEpisodeData) {
             super.onPostExecute(individualEpisodeData);
-            detailsCardDirectorTextView.setText(individualEpisodeData.director);
-            detailsCardTitleTextView.setText(individualEpisodeData.title);
-            detailsCardReleasedTextView.setText(individualEpisodeData.released);
+            detailsCardDirectorTextView.setText(getString(R.string.director_name,individualEpisodeData.director));
+            detailsCardWritersTextView.setText(individualEpisodeData.writer);
+            detailsCardReleasedTextView.setText(getString(R.string.released_date,individualEpisodeData.released));
             detailsCardPlotTextView.setText(individualEpisodeData.plot);
+            detailsCardTitleNameTextView.setText(individualEpisodeData.title);
+            imdbRatingTextView.setText(individualEpisodeData.imdbRating);
             Intent intent = new Intent("LOAD_COMPLETE");
             intent.putExtra("url",individualEpisodeData.poster);
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);

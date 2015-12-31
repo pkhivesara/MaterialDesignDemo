@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:card_view="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -11,8 +10,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="4dp"
-        android:layout_margin="5dp">
+        android:layout_margin="10dip">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,31 +18,74 @@
             android:layout_height="wrap_content">
 
             <TextView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
+                android:textColor="@android:color/holo_green_dark"
+                android:layout_margin="10dip"
+                android:id="@+id/detailsCardTitleNameTextView"
+            />
+
+            <include layout="@layout/divider_details"/>
+
+            <TextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text = "@string/director_name"
+                android:layout_margin="10dip"
                 android:id="@+id/detailsCardDirectorTextView"
-                />
+            />
+
+
 
             <TextView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:id="@+id/detailsCardTitleTextView"
-               />
-
-            <TextView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
+                android:textColor="@android:color/black"
+                android:layout_margin="10dip"
+                android:text="@string/released_date"
                 android:id="@+id/detailsCardReleasedTextView"
-               />
+            />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+
+        android:id="@+id/card_view5"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dip">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <TextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_green_dark"
+                android:layout_margin="10dip"
+                android:text="@string/writers_title"
+                android:id="@+id/detailsCardWriterTitleTextView"
+            />
+
+            <include layout="@layout/divider_details"/>
+
+            <TextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:layout_margin="10dip"
+                android:id="@+id/detailsCardWritersTextView"
+            />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -55,8 +96,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="4dp"
-        android:layout_margin="5dp">
+        android:layout_margin="10dip">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,14 +104,61 @@
             android:layout_height="wrap_content">
 
 
-
             <TextView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
+                android:textColor="@android:color/holo_green_dark"
+                android:text="@string/plot_title"
+                android:layout_margin="10dip"
+                android:id="@+id/detailsCardPlotTitleTextView"
+            />
+
+            <include layout="@layout/divider_details"/>
+
+            <TextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:layout_margin="10dip"
                 android:id="@+id/detailsCardPlotTextView"
+            />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+
+        android:id="@+id/card_view3"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dip">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <TextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_green_dark"
+                android:layout_margin="10dip"
+                android:text="@string/imdb_rating"
+                android:id="@+id/imdbRatingTitleTextView"
+            />
+
+            <include layout="@layout/divider_details"/>
+
+            <TextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:layout_margin="10dip"
+                android:id="@+id/imdbRatingTextView"
             />
         </LinearLayout>
     </android.support.v7.widget.CardView>

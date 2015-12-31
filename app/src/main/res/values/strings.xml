@@ -11,4 +11,10 @@
     <string name="string_six">Season 6</string>
     <string name="permission_rationale_text">Dummy Permission needed to go ahead</string>
     <string name="season_seven">Season 7</string>
+    <string name="imdb_rating">IMDB Rating</string>
+    <string name="plot_title">Plot</string>
+    <string name="writers_title">Writers</string>
+    <string name="director_name">Director: %1$s</string>
+    <string name="released_date">Released: %1$s</string>
+    <string name="nav_drawer_header">Update episodes list for:</string>
 </resources>
