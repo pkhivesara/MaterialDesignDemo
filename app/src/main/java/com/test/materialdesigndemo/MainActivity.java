@@ -1,14 +1,20 @@
 package com.test.materialdesigndemo;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.*;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.*;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -94,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
         SubActionButton expandedNotification = itemBuilder.setContentView(itemIcon).build();
         expandedNotification.setOnClickListener(this);
-        expandedNotification.setTag(TAG_EXPANDED_NOTIFICATION);
+        expandedNotification.setTag(TAG_BIG_PICTURE_STYLE_NOTIFICATION);
 
         /*Actionable Notification Setup */
         SubActionButton.Builder actionableNotificationBuilder = new SubActionButton.Builder(this);
@@ -103,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
         SubActionButton actionableNotification = actionableNotificationBuilder.setContentView(actionableNotificationIcon).build();
         actionableNotification.setOnClickListener(this);
-        actionableNotification.setTag(TAG_ACTIONABLE_NOTIFICATION);
+        actionableNotification.setTag(TAG_BIG_TEXT_STYLE_NOTIFICATION);
 
         /*Priority Notification Setup */
         SubActionButton.Builder priorityNotificationBuilder = new SubActionButton.Builder(this);
@@ -112,16 +118,26 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
         SubActionButton priorityNotification = priorityNotificationBuilder.setContentView(priorityNotificationIcon).build();
         priorityNotification.setOnClickListener(this);
-        priorityNotification.setTag(TAG_PRIORITY_NOTIFICATION);
+        priorityNotification.setTag(TAG_INBOX_STYLE_NOTIFICATION);
+
+
+        /*Stacked Notification Setup */
+        SubActionButton.Builder stackedNotificationBuilder = new SubActionButton.Builder(this);
+        ImageView stackedNotificationIcon = new ImageView(this);
+        itemIcon.setImageResource(android.R.drawable.arrow_down_float);
+
+        SubActionButton stackedNotification = stackedNotificationBuilder.setContentView(stackedNotificationIcon).build();
+        stackedNotification.setOnClickListener(this);
+        stackedNotification.setTag(TAG_STACKED_STYLE_NOTIFICATION);
 
         new FloatingActionMenu.Builder(this)
                 .addSubActionView(expandedNotification)
                 .addSubActionView(actionableNotification)
                 .addSubActionView(priorityNotification)
+                .addSubActionView(stackedNotification)
                 .attachTo(actionButton)
                 .build();
     }
-
 
 
     @Override
@@ -224,20 +240,62 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     @Override
     public void onClick(View v) {
-        switch ((String)v.getTag()) {
-            case TAG_ACTIONABLE_NOTIFICATION:
-                Toast.makeText(this,"action",Toast.LENGTH_SHORT).show();
+        NotificationManager notificationManagerCompat = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        switch ((String) v.getTag()) {
+            case TAG_BIG_TEXT_STYLE_NOTIFICATION:
+
+                NotificationCompat.Builder bigTextStyleNotification = showNormalNotification();
+                NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle(bigTextStyleNotification);
+                notificationManagerCompat.notify(1,
+                        bigTextStyle.setSummaryText("Summary Text for Big Text Style")
+                                .setBigContentTitle("Big Content Title goes here")
+                                .bigText("Some really big content description which is absolutely out of the way necessary should go here. Maybe")
+                                .build());
                 break;
-            case TAG_EXPANDED_NOTIFICATION:
-                Toast.makeText(this,"expanded",Toast.LENGTH_SHORT).show();
+            case TAG_BIG_PICTURE_STYLE_NOTIFICATION:
+                NotificationCompat.Builder bigPictureStyleNotification = showNormalNotification();
+                NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle(bigPictureStyleNotification);
+                notificationManagerCompat.notify(2,
+                        bigPictureStyle.setSummaryText("Summary Text for Big Picture Style")
+                                .setBigContentTitle("Big Picture Title goes here")
+                                .bigLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), android.R.drawable.sym_def_app_icon))
+                                .build());
+
                 break;
-            case TAG_PRIORITY_NOTIFICATION:
-                Toast.makeText(this,"priority",Toast.LENGTH_SHORT).show();
+            case TAG_INBOX_STYLE_NOTIFICATION:
+                NotificationCompat.Builder inboxStyleNotification = showNormalNotification();
+                NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle(inboxStyleNotification);
+                notificationManagerCompat.notify(3,
+                        inboxStyle.setSummaryText("Summary Text for Inbox Style")
+                                .addLine("First Line")
+                                .addLine("Second Line").build());
                 break;
+
+            case TAG_STACKED_STYLE_NOTIFICATION:
+                Toast.makeText(MainActivity.this,"Stacked",Toast.LENGTH_SHORT).show();
 
         }
     }
 
+
+    private android.support.v4.app.NotificationCompat.Builder showNormalNotification() {
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(this)
+                .setContentTitle("Title for Notification")
+                .setContentText("Content for the Notification")
+                .setTicker("Ticker Message in status bar")
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_dialog_email))
+                .setPriority(Notification.PRIORITY_MAX)
+                .addAction(android.R.drawable.ic_media_play, "Show settings", buildPendingIntent(Settings.ACTION_SECURITY_SETTINGS))
+                .setDefaults(Notification.DEFAULT_VIBRATE);
+        return notification;
+
+    }
+
+    private PendingIntent buildPendingIntent(String action) {
+        Intent intent = new Intent(action);
+        return PendingIntent.getActivity(this, 0, intent, 0);
+    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> fragmentList = new ArrayList<>();
