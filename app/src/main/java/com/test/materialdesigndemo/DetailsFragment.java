@@ -30,6 +30,7 @@ public class DetailsFragment extends Fragment {
     TextView detailsCardTitleTextView;
     TextView detailsCardDirectorTextView;
     TextView detailsCardReleasedTextView;
+    TextView detailsCardPlotTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,6 +42,7 @@ public class DetailsFragment extends Fragment {
         detailsCardDirectorTextView = (TextView) view.findViewById(R.id.detailsCardDirectorTextView);
         detailsCardTitleTextView = (TextView) view.findViewById(R.id.detailsCardTitleTextView);
         detailsCardReleasedTextView = (TextView) view.findViewById(R.id.detailsCardReleasedTextView);
+        detailsCardPlotTextView = (TextView) view.findViewById(R.id.detailsCardPlotTextView);
 
         new GetIndividualEpisodeData().execute(season, episode, title);
         return view;
@@ -55,6 +57,7 @@ public class DetailsFragment extends Fragment {
             detailsCardDirectorTextView.setText(individualEpisodeData.director);
             detailsCardTitleTextView.setText(individualEpisodeData.title);
             detailsCardReleasedTextView.setText(individualEpisodeData.released);
+            detailsCardPlotTextView.setText(individualEpisodeData.plot);
             Intent intent = new Intent("LOAD_COMPLETE");
             intent.putExtra("url",individualEpisodeData.poster);
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
