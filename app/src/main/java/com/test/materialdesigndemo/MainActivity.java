@@ -272,8 +272,20 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
                 break;
 
             case TAG_STACKED_STYLE_NOTIFICATION:
-                Toast.makeText(MainActivity.this,"Stacked",Toast.LENGTH_SHORT).show();
+                NotificationCompat.Builder stackedStyleNotification = showStackedNotification("First notification to be stacked");
+                notificationManagerCompat.notify(1,stackedStyleNotification.build());
 
+                NotificationCompat.Builder anotherStackedStyleNotification = showStackedNotification("Second notification to be stacked");
+                notificationManagerCompat.notify(2,anotherStackedStyleNotification.build());
+
+                NotificationCompat.Builder stackedNotificationHolder = showNormalNotification();
+                stackedNotificationHolder.setGroup("SAMPLE");
+                stackedNotificationHolder.setGroupSummary(true);
+                NotificationCompat.InboxStyle stackedStyle = new NotificationCompat.InboxStyle(stackedNotificationHolder);
+                notificationManagerCompat.notify(3,
+                        stackedStyle.setSummaryText("Summary Text for Inbox Style")
+                                .addLine("First notification to be stacked")
+                                .addLine("Second notification to be stacked").build());
         }
     }
 
@@ -291,6 +303,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         return notification;
 
     }
+
+
+    private android.support.v4.app.NotificationCompat.Builder showStackedNotification(String title) {
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(this)
+                .setContentTitle(title)
+                .setContentText("Content for the Notification")
+                .setTicker("Ticker Message in status bar")
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setGroup("SAMPLE")
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_dialog_email))
+                .setPriority(Notification.PRIORITY_MAX)
+                .addAction(android.R.drawable.ic_media_play, "Show settings", buildPendingIntent(Settings.ACTION_SECURITY_SETTINGS))
+                .setDefaults(Notification.DEFAULT_VIBRATE);
+        return notification;
+
+    }
+
 
     private PendingIntent buildPendingIntent(String action) {
         Intent intent = new Intent(action);
