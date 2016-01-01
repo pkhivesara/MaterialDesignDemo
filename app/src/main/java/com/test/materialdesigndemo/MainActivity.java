@@ -28,7 +28,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.oguzdev.circularfloatingactionmenu.library.*;
 
 import java.util.ArrayList;
@@ -184,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         showSnackBar(item, R.string.update_episode_list, -1);
         Intent intent = new Intent(NAV_DRAWER_BROADCAST_RECEIVER);
         String season = String.valueOf(item.getTitle().charAt(item.getTitle().length() - 1));
-        intent.putExtra(getString(R.string.season), season);
+        intent.putExtra(getString(R.string.season_four), season);
         LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
         return true;
     }

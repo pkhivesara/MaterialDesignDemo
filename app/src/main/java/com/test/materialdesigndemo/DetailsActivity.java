@@ -26,7 +26,7 @@ public class DetailsActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         detailsActivityImageView = (ImageView) findViewById(R.id.detailsActivityImageView);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Details View");
+        getSupportActionBar().setTitle(R.string.details_view);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -35,8 +35,6 @@ public class DetailsActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString("episode", getIntent().getStringExtra("episode"));
         bundle.putString("season", getIntent().getStringExtra("season"));
-
-
         bundle.putString("title", getIntent().getStringExtra("title"));
         detailsFragment.setArguments(bundle);
         fragmentTransaction.add(R.id.container_layout, detailsFragment);

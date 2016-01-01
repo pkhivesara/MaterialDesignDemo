@@ -186,7 +186,7 @@ public class MainFragment extends Fragment implements Constants {
     BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String year = intent.getStringExtra(context.getString(R.string.season));
+            String year = intent.getStringExtra(context.getString(R.string.season_four));
             season = year;
             new GetRaceList().execute(year);
         }
@@ -204,6 +204,9 @@ public class MainFragment extends Fragment implements Constants {
         @Override
         protected List doInBackground(String... params) {
             String year = params[0];
+            if(year.equalsIgnoreCase(getString(R.string.season_one))){
+               year = String.valueOf(year.charAt(year.length() - 1));
+            }
             String response = makeServiceCall(year);
             List<String> responseList = new ArrayList<String>();
             try {

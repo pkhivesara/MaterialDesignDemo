@@ -4,13 +4,13 @@
     <string name="tab_one">Tab One</string>
     <string name="tab_two">Tab Two</string>
     <string name="update_episode_list">"Updating episode list for Season "</string>
-    <string name="season_one">1</string>
-    <string name="season">Season</string>
+    <string name="season_one">Season 1</string>
+    <string name="season_four">Season 4</string>
     <string name="activity_image_trans">IMAGE_TRANSITION</string>
-    <string name="season_five">Season 5</string>
-    <string name="string_six">Season 6</string>
+    <string name="season_two">Season 2</string>
+    <string name="season_three">Season 3</string>
     <string name="permission_rationale_text">Dummy Permission needed to go ahead</string>
-    <string name="season_seven">Season 7</string>
+    <string name="season_five">Season 5</string>
     <string name="imdb_rating">IMDB Rating</string>
     <string name="plot_title">Plot</string>
     <string name="writers_title">Writers</string>
@@ -18,4 +18,5 @@
     <string name="released_date">Released: %1$s</string>
     <string name="nav_drawer_header">Update episodes list for:</string>
     <string name="episode_name">Episode name</string>
+    <string name="details_view">Details View</string>
 </resources>
