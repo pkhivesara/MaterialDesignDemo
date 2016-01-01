@@ -17,4 +17,5 @@
     <string name="director_name">Director: %1$s</string>
     <string name="released_date">Released: %1$s</string>
     <string name="nav_drawer_header">Update episodes list for:</string>
+    <string name="episode_name">Episode name</string>
 </resources>

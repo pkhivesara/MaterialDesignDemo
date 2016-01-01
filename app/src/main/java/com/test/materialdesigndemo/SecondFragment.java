@@ -161,7 +161,7 @@ public class SecondFragment extends Fragment implements Constants {
                     String raceName = responseList.get(position - 1);
                     ListViewHolder listViewHolder = (ListViewHolder) holder;
                     listViewHolder.raceNameTextView.setText(raceName);
-                 //   listViewHolder.thumbnailImageView.setImageResource(R.drawable.ic_himym);
+                    listViewHolder.thumbnailImageView.setImageResource(R.drawable.ic_friends);
                     break;
                 case TYPE_HEADER:
                     HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;

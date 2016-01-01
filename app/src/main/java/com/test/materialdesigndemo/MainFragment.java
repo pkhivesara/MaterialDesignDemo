@@ -120,8 +120,7 @@ public class MainFragment extends Fragment implements Constants {
                     String raceName = responseList.get(position-1);
                     ListViewHolder listViewHolder = (ListViewHolder) holder;
                     listViewHolder.raceNameTextView.setText(raceName);
-                    listViewHolder.thumbNailImageView.setImageResource(android.R.drawable.ic_dialog_map);
-                    //Picasso.with(getActivity()).load(R.drawable.ic_himym_1).into(listViewHolder.thumbNailImageView);
+                    Picasso.with(getActivity()).load(R.drawable.ic_himym_1).into(listViewHolder.thumbNailImageView);
                     break;
                 case TYPE_HEADER:
                     HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
