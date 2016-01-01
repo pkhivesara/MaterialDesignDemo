@@ -1,6 +1,7 @@
 package com.test.materialdesigndemo;
 
 import android.Manifest;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,14 +27,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.oguzdev.circularfloatingactionmenu.library.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface, SecondFragment.SecondFragmentInterface, Constants, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface, SecondFragment.SecondFragmentInterface, Constants {
 
 
     Toolbar toolbar;
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     CoordinatorLayout coordinatorLayout;
     MenuItem menuItem;
     android.support.v7.app.ActionBarDrawerToggle actionBarDrawerToggle;
+    FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,63 +80,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        setUpCircularFAB();
-    }
-
-    private void setUpCircularFAB() {
-        ImageView icon = new ImageView(this); // Create an icon
-        icon.setImageResource(R.drawable.ic_action_new);
-
-        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new
-                com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(this)
-                .setContentView(icon).setBackgroundDrawable(R.drawable.selector_fab)
-                .build();
-
-
-        /*Expanded Notification Setup */
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
-        ImageView itemIcon = new ImageView(this);
-        itemIcon.setImageResource(android.R.drawable.arrow_down_float);
-
-        SubActionButton expandedNotification = itemBuilder.setContentView(itemIcon).build();
-        expandedNotification.setOnClickListener(this);
-        expandedNotification.setTag(TAG_BIG_PICTURE_STYLE_NOTIFICATION);
-
-        /*Actionable Notification Setup */
-        SubActionButton.Builder actionableNotificationBuilder = new SubActionButton.Builder(this);
-        ImageView actionableNotificationIcon = new ImageView(this);
-        itemIcon.setImageResource(android.R.drawable.arrow_down_float);
-
-        SubActionButton actionableNotification = actionableNotificationBuilder.setContentView(actionableNotificationIcon).build();
-        actionableNotification.setOnClickListener(this);
-        actionableNotification.setTag(TAG_BIG_TEXT_STYLE_NOTIFICATION);
-
-        /*Priority Notification Setup */
-        SubActionButton.Builder priorityNotificationBuilder = new SubActionButton.Builder(this);
-        ImageView priorityNotificationIcon = new ImageView(this);
-        itemIcon.setImageResource(android.R.drawable.arrow_down_float);
-
-        SubActionButton priorityNotification = priorityNotificationBuilder.setContentView(priorityNotificationIcon).build();
-        priorityNotification.setOnClickListener(this);
-        priorityNotification.setTag(TAG_INBOX_STYLE_NOTIFICATION);
-
-
-        /*Stacked Notification Setup */
-        SubActionButton.Builder stackedNotificationBuilder = new SubActionButton.Builder(this);
-        ImageView stackedNotificationIcon = new ImageView(this);
-        itemIcon.setImageResource(android.R.drawable.arrow_down_float);
-
-        SubActionButton stackedNotification = stackedNotificationBuilder.setContentView(stackedNotificationIcon).build();
-        stackedNotification.setOnClickListener(this);
-        stackedNotification.setTag(TAG_STACKED_STYLE_NOTIFICATION);
-
-        new FloatingActionMenu.Builder(this)
-                .addSubActionView(expandedNotification)
-                .addSubActionView(actionableNotification)
-                .addSubActionView(priorityNotification)
-                .addSubActionView(stackedNotification)
-                .attachTo(actionButton)
-                .build();
     }
 
 
@@ -175,7 +119,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] array = new int[]{11,12,13,14};
+                int number = getRandom(array);
+                showNotification(number);
+            }
+        });
     }
+
+    private static int getRandom(int[] array) {
+        int rnd = new Random().nextInt(array.length);
+        return array[rnd];
+    }
+
 
     private boolean switchDataSetAsPermissionIsGranted(MenuItem item) {
         item.setChecked(true);
@@ -237,10 +197,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         viewPager.setAdapter(adapter);
     }
 
-    @Override
-    public void onClick(View v) {
+
+    public void showNotification(int number) {
         NotificationManager notificationManagerCompat = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        switch ((String) v.getTag()) {
+        switch (number) {
             case TAG_BIG_TEXT_STYLE_NOTIFICATION:
 
                 NotificationCompat.Builder bigTextStyleNotification = showNormalNotification();
@@ -272,10 +232,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
             case TAG_STACKED_STYLE_NOTIFICATION:
                 NotificationCompat.Builder stackedStyleNotification = showStackedNotification("First notification to be stacked");
-                notificationManagerCompat.notify(1,stackedStyleNotification.build());
+                notificationManagerCompat.notify(1, stackedStyleNotification.build());
 
                 NotificationCompat.Builder anotherStackedStyleNotification = showStackedNotification("Second notification to be stacked");
-                notificationManagerCompat.notify(2,anotherStackedStyleNotification.build());
+                notificationManagerCompat.notify(2, anotherStackedStyleNotification.build());
 
                 NotificationCompat.Builder stackedNotificationHolder = showNormalNotification();
                 stackedNotificationHolder.setGroup("SAMPLE");
