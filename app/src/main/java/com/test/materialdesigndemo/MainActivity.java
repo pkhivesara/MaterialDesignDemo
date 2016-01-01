@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -164,8 +165,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
             snackBar = Snackbar.make(coordinatorLayout, getString(message) + item.getTitle(), snackBarLength);
         }
         View textView = snackBar.getView();
+        textView.setBackgroundColor(Color.WHITE);
         TextView tv = (TextView) textView.findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(getResources().getColor(R.color.snackBarTextColor));
+
         snackBar.show();
     }
 
@@ -251,8 +254,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     private android.support.v4.app.NotificationCompat.Builder showNormalNotification() {
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(this)
-                .setContentTitle("Title for Notification")
-                .setContentText("Content for the Notification")
+                .setContentTitle("Title for Notification via NormalNotificationBuilder")
+                .setContentText("Content for the Notification via NormalNotificationBuilder")
                 .setTicker("Ticker Message in status bar")
                 .setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_dialog_email))
@@ -267,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     private android.support.v4.app.NotificationCompat.Builder showStackedNotification(String title) {
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(this)
                 .setContentTitle(title)
-                .setContentText("Content for the Notification")
+                .setContentText("Content for the Notification via StackedNotificationBuilder")
                 .setTicker("Ticker Message in status bar")
                 .setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setGroup("SAMPLE")

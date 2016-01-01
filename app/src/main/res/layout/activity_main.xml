@@ -59,7 +59,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:clickable="true"
-            android:background="@drawable/ic_action_new"
+            app:elevation="6dip"
+            app:rippleColor="@android:color/holo_blue_light"
+            app:pressedTranslationZ="12dip"
+            android:src="@drawable/ic_action_new"
             app:layout_anchor="@id/coordinatorLayout"
             app:layout_anchorGravity="bottom|right|end"/>
     </android.support.design.widget.CoordinatorLayout>
