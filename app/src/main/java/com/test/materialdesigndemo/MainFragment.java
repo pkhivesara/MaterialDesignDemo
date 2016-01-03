@@ -200,7 +200,7 @@ public class MainFragment extends Fragment implements Constants {
 
             @Override
             public void onClick(View v) {
-                mainFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "How", season);
+                mainFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "How I Met Your Mother", season);
             }
         }
     }
