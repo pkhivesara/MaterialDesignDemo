@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,10 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,7 +49,19 @@ public class MainFragment extends Fragment implements Constants {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
         setUpRecyclerView();
-        new GetRaceList().execute(getContext().getString(R.string.season_one));
+        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("How&I&Met&Your&Mother", "1");
+        episodeDataList.enqueue(new Callback<EpisodeList>() {
+            @Override
+            public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
+                Log.d("%%%%", "success");
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d("%%%%%", "fail");
+            }
+        });
+        // new GetRaceList().execute(getContext().getString(R.string.season_one));
         return view;
 
     }
@@ -154,7 +171,7 @@ public class MainFragment extends Fragment implements Constants {
 
             public HeaderViewHolder(View itemView) {
                 super(itemView);
-                ButterKnife.bind(this,itemView);
+                ButterKnife.bind(this, itemView);
             }
         }
 
@@ -175,7 +192,7 @@ public class MainFragment extends Fragment implements Constants {
 
             public ListViewHolder(View itemView) {
                 super(itemView);
-                ButterKnife.bind(this,itemView);
+                ButterKnife.bind(this, itemView);
                 itemView.setOnClickListener(this);
 
             }
