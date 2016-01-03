@@ -1,7 +1,6 @@
 package com.test.materialdesigndemo;
 
 import android.Manifest;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,8 +26,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,24 +37,42 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.MainFragmentInterface, SecondFragment.SecondFragmentInterface, Constants {
 
-
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
-    FrameLayout frameLayout;
+
+    @Bind(R.id.tab_layout)
     TabLayout tabLayout;
+
+    @Bind(R.id.view_pager)
     ViewPager viewPager;
+
+    @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    ActionBar actionBar;
+
+    @Bind(R.id.navigation_view)
     NavigationView navigationView;
+
+    @Bind(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+
+
     MenuItem menuItem;
     android.support.v7.app.ActionBarDrawerToggle actionBarDrawerToggle;
-    FloatingActionButton floatingActionButton;
+    ActionBar actionBar;
+
+
+    @OnClick(R.id.fab)
+    public void onClick() {
+        int[] array = new int[]{11, 12, 13, 14};
+        int number = getRandom(array);
+        showNotification(number);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initializeUIElements();
+        ButterKnife.bind(this);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         toolBarSetup();
@@ -75,8 +94,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
             }
         });
 
-
     }
+
+
 
     @Override
     protected void onPostResume() {
@@ -112,25 +132,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
     }
 
-    private void initializeUIElements() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int[] array = new int[]{11,12,13,14};
-                int number = getRandom(array);
-                showNotification(number);
-            }
-        });
-    }
 
     private static int getRandom(int[] array) {
         int rnd = new Random().nextInt(array.length);

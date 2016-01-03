@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,11 +29,22 @@ import java.util.List;
 
 public class DetailsFragment extends Fragment {
 
+    @Bind(R.id.detailsCardWritersTextView)
     TextView detailsCardWritersTextView;
+
+    @Bind(R.id.detailsCardDirectorTextView)
     TextView detailsCardDirectorTextView;
+
+    @Bind(R.id.detailsCardReleasedTextView)
     TextView detailsCardReleasedTextView;
+
+    @Bind(R.id.detailsCardPlotTextView)
     TextView detailsCardPlotTextView;
+
+    @Bind(R.id.detailsCardTitleNameTextView)
     TextView detailsCardTitleNameTextView;
+
+    @Bind(R.id.imdbRatingTextView)
     TextView imdbRatingTextView;
 
     @Override
@@ -41,12 +54,7 @@ public class DetailsFragment extends Fragment {
         String episode = getArguments().getString("episode");
         String title = getArguments().getString("title");
         String season = getArguments().getString("season");
-        detailsCardDirectorTextView = (TextView) view.findViewById(R.id.detailsCardDirectorTextView);
-        detailsCardWritersTextView = (TextView) view.findViewById(R.id.detailsCardWritersTextView);
-        detailsCardReleasedTextView = (TextView) view.findViewById(R.id.detailsCardReleasedTextView);
-        detailsCardPlotTextView = (TextView) view.findViewById(R.id.detailsCardPlotTextView);
-        detailsCardTitleNameTextView = (TextView) view.findViewById(R.id.detailsCardTitleNameTextView);
-        imdbRatingTextView = (TextView) view.findViewById(R.id.imdbRatingTextView);
+        ButterKnife.bind(this, view);
 
         new GetIndividualEpisodeData().execute(season, episode, title);
         return view;
@@ -58,14 +66,14 @@ public class DetailsFragment extends Fragment {
         @Override
         protected void onPostExecute(IndividualEpisodeData individualEpisodeData) {
             super.onPostExecute(individualEpisodeData);
-            detailsCardDirectorTextView.setText(getString(R.string.director_name,individualEpisodeData.director));
+            detailsCardDirectorTextView.setText(getString(R.string.director_name, individualEpisodeData.director));
             detailsCardWritersTextView.setText(individualEpisodeData.writer);
-            detailsCardReleasedTextView.setText(getString(R.string.released_date,individualEpisodeData.released));
+            detailsCardReleasedTextView.setText(getString(R.string.released_date, individualEpisodeData.released));
             detailsCardPlotTextView.setText(individualEpisodeData.plot);
             detailsCardTitleNameTextView.setText(individualEpisodeData.title);
             imdbRatingTextView.setText(individualEpisodeData.imdbRating);
             Intent intent = new Intent("LOAD_COMPLETE");
-            intent.putExtra("url",individualEpisodeData.poster);
+            intent.putExtra("url", individualEpisodeData.poster);
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
         }
 

@@ -19,4 +19,6 @@
     <string name="nav_drawer_header">Update episodes list for:</string>
     <string name="episode_name">Episode name</string>
     <string name="details_view">Details View</string>
+    <string name="friends_title">Friends</string>
+    <string name="himym_title">How I Met Your Mother</string>
 </resources>

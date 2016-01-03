@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,7 +71,7 @@ public class SecondFragment extends Fragment implements Constants {
 
 
             String year = params[0];
-            if(year.equalsIgnoreCase(getString(R.string.season_one))){
+            if (year.equalsIgnoreCase(getString(R.string.season_one))) {
                 year = String.valueOf(year.charAt(year.length() - 1));
             }
             String response = makeServiceCall(year);
@@ -136,7 +138,7 @@ public class SecondFragment extends Fragment implements Constants {
         recyclerView.setAdapter(myAdapter);
     }
 
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
 
         List<String> responseList;
 
@@ -168,7 +170,7 @@ public class SecondFragment extends Fragment implements Constants {
                     break;
                 case TYPE_HEADER:
                     HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
-                    headerViewHolder.headerTextView.setText("Friends");
+                    headerViewHolder.headerTextView.setText(R.string.friends_title);
                     break;
             }
         }
@@ -189,11 +191,12 @@ public class SecondFragment extends Fragment implements Constants {
 
 
         public class HeaderViewHolder extends MainViewHolder {
+            @Bind(R.id.header_text_view)
             TextView headerTextView;
 
             public HeaderViewHolder(View itemView) {
                 super(itemView);
-                headerTextView = (TextView) itemView.findViewById(R.id.header_text_view);
+                ButterKnife.bind(this,itemView);
             }
         }
 
@@ -205,21 +208,23 @@ public class SecondFragment extends Fragment implements Constants {
         }
 
         public class ListViewHolder extends MainViewHolder implements View.OnClickListener {
+            @Bind(R.id.raceName)
             TextView raceNameTextView;
+
+            @Bind(R.id.thumbNailImageView)
             ImageView thumbnailImageView;
 
 
             public ListViewHolder(View itemView) {
                 super(itemView);
                 itemView.setOnClickListener(this);
-                raceNameTextView = (TextView) itemView.findViewById(R.id.raceName);
-                thumbnailImageView = (ImageView) itemView.findViewById(R.id.thumbNailImageView);
+                ButterKnife.bind(this,itemView);
 
             }
 
             @Override
             public void onClick(View v) {
-                secondFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "Friends",season);
+                secondFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "Friends", season);
             }
         }
     }
@@ -250,6 +255,6 @@ public class SecondFragment extends Fragment implements Constants {
     }
 
     public interface SecondFragmentInterface {
-        void listItemClicked(int position, View view, String title,String season);
+        void listItemClicked(int position, View view, String title, String season);
     }
 }

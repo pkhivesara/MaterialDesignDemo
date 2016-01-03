@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,14 +86,14 @@ public class MainFragment extends Fragment implements Constants {
     }
 
     public interface MainFragmentInterface {
-        void listItemClicked(int position,View view,String title,String season);
+        void listItemClicked(int position, View view, String title, String season);
     }
 
     public static MainFragment newInstance() {
         return new MainFragment();
     }
 
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
 
         List<String> responseList;
 
@@ -117,14 +119,14 @@ public class MainFragment extends Fragment implements Constants {
         public void onBindViewHolder(MainViewHolder holder, int position) {
             switch (holder.getItemViewType()) {
                 case TYPE_LIST:
-                    String raceName = responseList.get(position-1);
+                    String raceName = responseList.get(position - 1);
                     ListViewHolder listViewHolder = (ListViewHolder) holder;
                     listViewHolder.raceNameTextView.setText(raceName);
                     Picasso.with(getActivity()).load(R.drawable.ic_himym_1).into(listViewHolder.thumbNailImageView);
                     break;
                 case TYPE_HEADER:
                     HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
-                    headerViewHolder.headerTextView.setText("How I Met Your Mother");
+                    headerViewHolder.headerTextView.setText(R.string.himym_title);
 
                     break;
             }
@@ -147,11 +149,12 @@ public class MainFragment extends Fragment implements Constants {
 
 
         public class HeaderViewHolder extends MainViewHolder {
+            @Bind(R.id.header_text_view)
             TextView headerTextView;
 
             public HeaderViewHolder(View itemView) {
                 super(itemView);
-                headerTextView = (TextView) itemView.findViewById(R.id.header_text_view);
+                ButterKnife.bind(this,itemView);
             }
         }
 
@@ -163,21 +166,23 @@ public class MainFragment extends Fragment implements Constants {
         }
 
         public class ListViewHolder extends MainViewHolder implements View.OnClickListener {
+            @Bind(R.id.raceName)
             TextView raceNameTextView;
+
+            @Bind(R.id.thumbNailImageView)
             ImageView thumbNailImageView;
 
 
             public ListViewHolder(View itemView) {
                 super(itemView);
+                ButterKnife.bind(this,itemView);
                 itemView.setOnClickListener(this);
-                raceNameTextView = (TextView) itemView.findViewById(R.id.raceName);
-                thumbNailImageView = (ImageView) itemView.findViewById(R.id.thumbNailImageView);
 
             }
 
             @Override
             public void onClick(View v) {
-                mainFragmentInterface.listItemClicked(getAdapterPosition(),v.findViewById(R.id.thumbNailImageView),"How",season);
+                mainFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "How", season);
             }
         }
     }
@@ -204,8 +209,8 @@ public class MainFragment extends Fragment implements Constants {
         @Override
         protected List doInBackground(String... params) {
             String year = params[0];
-            if(year.equalsIgnoreCase(getString(R.string.season_one))){
-               year = String.valueOf(year.charAt(year.length() - 1));
+            if (year.equalsIgnoreCase(getString(R.string.season_one))) {
+                year = String.valueOf(year.charAt(year.length() - 1));
             }
             String response = makeServiceCall(year);
             List<String> responseList = new ArrayList<String>();
@@ -232,7 +237,7 @@ public class MainFragment extends Fragment implements Constants {
         StringBuffer response = null;
         URL url = null;
         try {
-            url = new URL("http://www.omdbapi.com/?t=How&I&Met&Your&Mother&Season="+year);
+            url = new URL("http://www.omdbapi.com/?t=How&I&Met&Your&Mother&Season=" + year);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
