@@ -49,10 +49,11 @@ public class MainFragment extends Fragment implements Constants {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
         setUpRecyclerView();
-        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("How&I&Met&Your&Mother", "1");
+        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("How I Met Your Mother", "1");
         episodeDataList.enqueue(new Callback<EpisodeList>() {
             @Override
             public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
+
                 Log.d("%%%%", "success");
             }
 
