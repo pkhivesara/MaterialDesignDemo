@@ -54,7 +54,7 @@ public class MainFragment extends Fragment implements Constants {
             @Override
             public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
 
-                Log.d("%%%%", "success");
+                initializeData(response.body().Episodes);
             }
 
             @Override
@@ -97,7 +97,7 @@ public class MainFragment extends Fragment implements Constants {
 
     }
 
-    private void initializeData(List<String> responseList) {
+    private void initializeData(List<EpisodeList.Episodes> responseList) {
 
         MyAdapter myAdapter = new MyAdapter(responseList);
         recyclerView.setAdapter(myAdapter);
@@ -113,9 +113,10 @@ public class MainFragment extends Fragment implements Constants {
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
 
-        List<String> responseList;
+        List<EpisodeList.Episodes> responseList;
 
-        MyAdapter(List<String> testDataList) {
+
+        MyAdapter(List<EpisodeList.Episodes> testDataList) {
             this.responseList = testDataList;
         }
 
@@ -137,7 +138,7 @@ public class MainFragment extends Fragment implements Constants {
         public void onBindViewHolder(MainViewHolder holder, int position) {
             switch (holder.getItemViewType()) {
                 case TYPE_LIST:
-                    String raceName = responseList.get(position - 1);
+                    String raceName = responseList.get(position - 1).Title;
                     ListViewHolder listViewHolder = (ListViewHolder) holder;
                     listViewHolder.raceNameTextView.setText(raceName);
                     Picasso.with(getActivity()).load(R.drawable.ic_himym_1).into(listViewHolder.thumbNailImageView);
