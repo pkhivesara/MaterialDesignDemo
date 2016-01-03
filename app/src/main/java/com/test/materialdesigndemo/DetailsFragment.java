@@ -17,6 +17,10 @@ import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,8 +59,20 @@ public class DetailsFragment extends Fragment {
         String title = getArguments().getString("title");
         String season = getArguments().getString("season");
         ButterKnife.bind(this, view);
+        Call<IndividualEpisodeData> episodeDataList = RestClient.get().getEpisodeDetail(title, season, episode);
+        episodeDataList.enqueue(new Callback<IndividualEpisodeData>() {
+            @Override
+            public void onResponse(Response<IndividualEpisodeData> response, Retrofit retrofit) {
+                Log.d("%%%", "success");
+            }
 
-        new GetIndividualEpisodeData().execute(season, episode, title);
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d("%%%", "fail");
+            }
+        });
+
+        //new GetIndividualEpisodeData().execute(season, episode, title);
         return view;
 
     }

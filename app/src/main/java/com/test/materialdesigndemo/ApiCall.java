@@ -11,9 +11,8 @@ public interface ApiCall {
 
 
 
-    @GET("{title}&Season ={season}&episode={episodeNumber}")
-    public void getEpisodeDetail(@Path("title") String title, @Path("season") String season, @Path("episodeNumber") String episodeNumber,
-                                 Callback<IndividualEpisodeData> callback);
+    @GET("?")
+    Call<IndividualEpisodeData> getEpisodeDetail(@Query("t") String title, @Query("Season") String season, @Query("episode") String episodeNumber);
 
     @GET("?")
     Call<EpisodeList> getEpisodeList(@Query("t") String title, @Query("Season") String season);

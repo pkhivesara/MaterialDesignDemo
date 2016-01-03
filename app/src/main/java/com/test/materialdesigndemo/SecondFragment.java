@@ -22,6 +22,10 @@ import butterknife.ButterKnife;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,12 +47,28 @@ public class SecondFragment extends Fragment implements Constants {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_second, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
+        setUpRecyclerView();
+        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("Friends", "1");
+        episodeDataList.enqueue(new Callback<EpisodeList>() {
+            @Override
+            public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
+
+                initializeData(response.body().Episodes);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d("%%%%%", "fail");
+            }
+        });
+        return view;
+    }
+
+    private void setUpRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerDecoration(getActivity()));
-        new GetConstructorsList().execute(getString(R.string.season_one));
-        return view;
     }
 
     @Override
@@ -63,54 +83,24 @@ public class SecondFragment extends Fragment implements Constants {
     }
 
 
-    private class GetConstructorsList extends AsyncTask<String, Void, List> {
-
-
-        @Override
-        protected List doInBackground(String... params) {
-
-
-            String year = params[0];
-            if (year.equalsIgnoreCase(getString(R.string.season_one))) {
-                year = String.valueOf(year.charAt(year.length() - 1));
-            }
-            String response = makeServiceCall(year);
-            List<String> responseList = new ArrayList<String>();
-
-
-            try {
-                JSONObject jsonObject = new JSONObject(response);
-                JSONArray searchArray = jsonObject.getJSONArray("Episodes");
-
-                for (int i = 0; i < searchArray.length(); i++) {
-                    JSONObject mobileObject = searchArray.getJSONObject(i);
-                    String movieTitle = mobileObject.getString("Title");
-                    responseList.add(movieTitle);
-                }
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.d("######", e.getMessage());
-            }
-            return responseList;
-        }
-
-        @Override
-        protected void onPostExecute(List list) {
-            super.onPostExecute(list);
-            initializeData(list);
-
-        }
-
-    }
-
     BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String year = intent.getStringExtra(context.getString(R.string.season_four));
             season = year;
-            new GetConstructorsList().execute(year);
+            Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("Friends", season);
+            episodeDataList.enqueue(new Callback<EpisodeList>() {
+                @Override
+                public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
+
+                    initializeData(response.body().Episodes);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.d("%%%%%", "fail");
+                }
+            });
         }
     };
 
@@ -132,7 +122,7 @@ public class SecondFragment extends Fragment implements Constants {
     }
 
 
-    private void initializeData(List<String> responseList) {
+    private void initializeData(List<EpisodeList.Episodes> responseList) {
 
         MyAdapter myAdapter = new MyAdapter(responseList);
         recyclerView.setAdapter(myAdapter);
@@ -140,9 +130,9 @@ public class SecondFragment extends Fragment implements Constants {
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
 
-        List<String> responseList;
+        List<EpisodeList.Episodes> responseList;
 
-        MyAdapter(List<String> testDataList) {
+        MyAdapter(List<EpisodeList.Episodes> testDataList) {
             this.responseList = testDataList;
         }
 
@@ -163,7 +153,7 @@ public class SecondFragment extends Fragment implements Constants {
         public void onBindViewHolder(MainViewHolder holder, int position) {
             switch (holder.getItemViewType()) {
                 case TYPE_LIST:
-                    String raceName = responseList.get(position - 1);
+                    String raceName = responseList.get(position - 1).Title;
                     ListViewHolder listViewHolder = (ListViewHolder) holder;
                     listViewHolder.raceNameTextView.setText(raceName);
                     listViewHolder.thumbnailImageView.setImageResource(R.drawable.ic_friends);
@@ -229,30 +219,6 @@ public class SecondFragment extends Fragment implements Constants {
         }
     }
 
-    private String makeServiceCall(String year) {
-        StringBuffer response = null;
-        URL url = null;
-        try {
-            url = new URL("http://www.omdbapi.com/?t=Friends&Season=" + year);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            HttpURLConnection httpsURLConnection = (HttpURLConnection) url.openConnection();
-            httpsURLConnection.setRequestMethod("GET");
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(httpsURLConnection.getInputStream()));
-            String inputLine;
-            response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return response.toString();
-    }
 
     public interface SecondFragmentInterface {
         void listItemClicked(int position, View view, String title, String season);

@@ -62,7 +62,6 @@ public class MainFragment extends Fragment implements Constants {
                 Log.d("%%%%%", "fail");
             }
         });
-        // new GetRaceList().execute(getContext().getString(R.string.season_one));
         return view;
 
     }
@@ -212,68 +211,21 @@ public class MainFragment extends Fragment implements Constants {
         public void onReceive(Context context, Intent intent) {
             String year = intent.getStringExtra(context.getString(R.string.season_four));
             season = year;
-            new GetRaceList().execute(year);
+            Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("How I Met Your Mother", season);
+            episodeDataList.enqueue(new Callback<EpisodeList>() {
+                @Override
+                public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
+
+                    initializeData(response.body().Episodes);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.d("%%%%%", "fail");
+                }
+            });
         }
     };
 
-    private class GetRaceList extends AsyncTask<String, Void, List> {
 
-        @Override
-        protected void onPostExecute(List list) {
-            super.onPostExecute(list);
-            initializeData(list);
-
-        }
-
-        @Override
-        protected List doInBackground(String... params) {
-            String year = params[0];
-            if (year.equalsIgnoreCase(getString(R.string.season_one))) {
-                year = String.valueOf(year.charAt(year.length() - 1));
-            }
-            String response = makeServiceCall(year);
-            List<String> responseList = new ArrayList<String>();
-            try {
-                JSONObject jsonObject = new JSONObject(response);
-                JSONArray searchArray = jsonObject.getJSONArray("Episodes");
-
-                for (int i = 0; i < searchArray.length(); i++) {
-                    JSONObject mobileObject = searchArray.getJSONObject(i);
-                    String movieTitle = mobileObject.getString("Title");
-                    responseList.add(movieTitle);
-                }
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return responseList;
-        }
-    }
-
-
-    private String makeServiceCall(String year) {
-        StringBuffer response = null;
-        URL url = null;
-        try {
-            url = new URL("http://www.omdbapi.com/?t=How&I&Met&Your&Mother&Season=" + year);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            HttpURLConnection httpsURLConnection = (HttpURLConnection) url.openConnection();
-            httpsURLConnection.setRequestMethod("GET");
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(httpsURLConnection.getInputStream()));
-            String inputLine;
-            response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return response.toString();
-    }
 }

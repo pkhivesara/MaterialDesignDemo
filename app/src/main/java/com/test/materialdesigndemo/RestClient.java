@@ -28,7 +28,7 @@ public class RestClient {
     private static void setupRestClient() {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(Level.BASIC);
+        logging.setLevel(Level.BODY);
         OkHttpClient httpClient = new OkHttpClient();
         httpClient.interceptors().add(logging);
 
