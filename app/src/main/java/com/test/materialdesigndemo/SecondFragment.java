@@ -48,7 +48,7 @@ public class SecondFragment extends Fragment implements Constants {
         View view = inflater.inflate(R.layout.fragment_second, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
         setUpRecyclerView();
-        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("Friends", "1");
+        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList(getString(R.string.friends_title), "1");
         episodeDataList.enqueue(new Callback<EpisodeList>() {
             @Override
             public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
@@ -88,7 +88,7 @@ public class SecondFragment extends Fragment implements Constants {
         public void onReceive(Context context, Intent intent) {
             String year = intent.getStringExtra(context.getString(R.string.season_four));
             season = year;
-            Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("Friends", season);
+            Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList(getString(R.string.friends_title), season);
             episodeDataList.enqueue(new Callback<EpisodeList>() {
                 @Override
                 public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
@@ -217,7 +217,7 @@ public class SecondFragment extends Fragment implements Constants {
                 if(season ==  null){
                     season = "1";
                 }
-                secondFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "Friends", season);
+                secondFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), getString(R.string.friends_title), season);
             }
         }
     }
