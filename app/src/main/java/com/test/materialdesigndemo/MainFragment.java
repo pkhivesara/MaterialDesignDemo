@@ -49,7 +49,7 @@ public class MainFragment extends Fragment implements Constants {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
         setUpRecyclerView();
-        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("How I Met Your Mother", "1");
+        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList(getString(R.string.himym_title), "1");
         episodeDataList.enqueue(new Callback<EpisodeList>() {
             @Override
             public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
@@ -213,7 +213,7 @@ public class MainFragment extends Fragment implements Constants {
         public void onReceive(Context context, Intent intent) {
             String year = intent.getStringExtra(context.getString(R.string.season_four));
             season = year;
-            Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList("How I Met Your Mother", season);
+            Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList(getString(R.string.himym_title), season);
             episodeDataList.enqueue(new Callback<EpisodeList>() {
                 @Override
                 public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
