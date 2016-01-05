@@ -214,6 +214,9 @@ public class SecondFragment extends Fragment implements Constants {
 
             @Override
             public void onClick(View v) {
+                if(season ==  null){
+                    season = "1";
+                }
                 secondFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "Friends", season);
             }
         }

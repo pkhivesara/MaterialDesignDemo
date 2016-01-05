@@ -53,7 +53,6 @@ public class MainFragment extends Fragment implements Constants {
         episodeDataList.enqueue(new Callback<EpisodeList>() {
             @Override
             public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
-
                 initializeData(response.body().Episodes);
             }
 
@@ -200,6 +199,9 @@ public class MainFragment extends Fragment implements Constants {
 
             @Override
             public void onClick(View v) {
+                if(season ==  null){
+                    season = "1";
+                }
                 mainFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "How I Met Your Mother", season);
             }
         }

@@ -2,9 +2,7 @@ package com.test.materialdesigndemo;
 
 
 import retrofit.Call;
-import retrofit.Callback;
 import retrofit.http.GET;
-import retrofit.http.Path;
 import retrofit.http.Query;
 
 public interface ApiCall {
