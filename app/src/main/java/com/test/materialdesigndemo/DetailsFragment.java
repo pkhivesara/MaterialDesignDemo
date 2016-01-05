@@ -55,9 +55,9 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
-        String episode = getArguments().getString("episode");
-        String title = getArguments().getString("title");
-        String season = getArguments().getString("season");
+        String episode = getArguments().getString(getString(R.string.episode));
+        String title = getArguments().getString(getString(R.string.title));
+        String season = getArguments().getString(getString(R.string.season));
         ButterKnife.bind(this, view);
         Call<IndividualEpisodeData> episodeDataList = RestClient.get().getEpisodeDetail(title, season, episode);
         episodeDataList.enqueue(new Callback<IndividualEpisodeData>() {
@@ -69,7 +69,7 @@ public class DetailsFragment extends Fragment {
                 detailsCardPlotTextView.setText(response.body().Plot);
                 detailsCardTitleNameTextView.setText(response.body().Title);
                 imdbRatingTextView.setText(response.body().imdbRating);
-                Intent intent = new Intent("LOAD_COMPLETE");
+                Intent intent = new Intent(getString(R.string.load_complete_broadcast));
                 intent.putExtra("url", response.body().Poster);
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
             }

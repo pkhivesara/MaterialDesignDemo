@@ -49,18 +49,7 @@ public class MainFragment extends Fragment implements Constants {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
         setUpRecyclerView();
-        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList(getString(R.string.himym_title), "1");
-        episodeDataList.enqueue(new Callback<EpisodeList>() {
-            @Override
-            public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
-                initializeData(response.body().Episodes);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.d("%%%%%", "fail");
-            }
-        });
+        getIndividualEpisodeData("1");
         return view;
 
     }
@@ -199,10 +188,10 @@ public class MainFragment extends Fragment implements Constants {
 
             @Override
             public void onClick(View v) {
-                if(season ==  null){
+                if (season == null) {
                     season = "1";
                 }
-                mainFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), "How I Met Your Mother", season);
+                mainFragmentInterface.listItemClicked(getAdapterPosition(), v.findViewById(R.id.thumbNailImageView), getString(R.string.himym_title), season);
             }
         }
     }
@@ -211,23 +200,26 @@ public class MainFragment extends Fragment implements Constants {
     BroadcastReceiver navDrawerClickedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String year = intent.getStringExtra(context.getString(R.string.season_four));
-            season = year;
-            Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList(getString(R.string.himym_title), season);
-            episodeDataList.enqueue(new Callback<EpisodeList>() {
-                @Override
-                public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
-
-                    initializeData(response.body().Episodes);
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    Log.d("%%%%%", "fail");
-                }
-            });
+            season = intent.getStringExtra(context.getString(R.string.season_four));
+            getIndividualEpisodeData(season);
         }
     };
+
+    private void getIndividualEpisodeData(String season) {
+        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList(getString(R.string.himym_title), season);
+        episodeDataList.enqueue(new Callback<EpisodeList>() {
+            @Override
+            public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
+
+                initializeData(response.body().Episodes);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d("%%%%%", "retrofit failure");
+            }
+        });
+    }
 
 
 }

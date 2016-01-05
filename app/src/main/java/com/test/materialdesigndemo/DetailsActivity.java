@@ -33,9 +33,9 @@ public class DetailsActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         DetailsFragment detailsFragment = DetailsFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putString("episode", getIntent().getStringExtra("episode"));
-        bundle.putString("season", getIntent().getStringExtra("season"));
-        bundle.putString("title", getIntent().getStringExtra("title"));
+        bundle.putString(getString(R.string.episode), getIntent().getStringExtra(getString(R.string.episode)));
+        bundle.putString(getString(R.string.season), getIntent().getStringExtra(getString(R.string.season)));
+        bundle.putString(getString(R.string.title), getIntent().getStringExtra(getString(R.string.title)));
         detailsFragment.setArguments(bundle);
         fragmentTransaction.add(R.id.container_layout, detailsFragment);
         fragmentTransaction.commit();
@@ -57,7 +57,7 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(loadCompleteBroadcastReceiver,new IntentFilter("LOAD_COMPLETE"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(loadCompleteBroadcastReceiver,new IntentFilter(getString(R.string.load_complete_broadcast)));
     }
 
     @Override
