@@ -1,6 +1,8 @@
 package com.test.materialdesigndemo;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -41,12 +43,19 @@ public class SecondFragment extends Fragment implements Constants {
     RecyclerView recyclerView;
     SecondFragmentInterface secondFragmentInterface;
     String season;
+    AlarmManager alarmManager;
+    PendingIntent pendingIntent;
+    AlarmManager.AlarmClockInfo alarmClockInfo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_second, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
+        alarmManager = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+        alarmClockInfo = new AlarmManager.AlarmClockInfo(System.currentTimeMillis() + 15000,pendingIntent);
+        pendingIntent = getActivity().createPendingResult(ALARM_ID,new Intent(),0);
+        alarmManager.setAlarmClock(alarmClockInfo,pendingIntent);
         setUpRecyclerView();
         getIndividualEpisodeData("1");
         return view;
