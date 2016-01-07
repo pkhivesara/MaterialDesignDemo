@@ -24,7 +24,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.*;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -73,10 +76,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-
         super.onCreate(savedInstanceState);
-        getWindow().setExitTransition(new Slide());
+        getWindow().setExitTransition(new Explode());
+        getWindow().setReenterTransition(new Slide(Gravity.LEFT));
         setContentView(R.layout.activity_main);
+
         ButterKnife.bind(this);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
