@@ -44,18 +44,27 @@ public class SecondFragment extends Fragment implements Constants {
     SecondFragmentInterface secondFragmentInterface;
     String season;
     AlarmManager alarmManager;
-    PendingIntent pendingIntent;
     AlarmManager.AlarmClockInfo alarmClockInfo;
+    Intent intent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_second, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
+
+
+
+        intent = new Intent(getActivity(),DozeModeReceiver.class);
+        PendingIntent dozeModePendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
+
         alarmManager = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmClockInfo = new AlarmManager.AlarmClockInfo(System.currentTimeMillis() + 15000,pendingIntent);
-        pendingIntent = getActivity().createPendingResult(ALARM_ID,new Intent(),0);
-        alarmManager.setAlarmClock(alarmClockInfo,pendingIntent);
+        alarmClockInfo = new AlarmManager.AlarmClockInfo(System.currentTimeMillis() + 30000,dozeModePendingIntent);
+      //  alarmManager.setAlarmClock(alarmClockInfo,dozeModePendingIntent);
+        alarmManager.setExactAndAllowWhileIdle(1,30000,dozeModePendingIntent);
+
+
+
         setUpRecyclerView();
         getIndividualEpisodeData("1");
         return view;
