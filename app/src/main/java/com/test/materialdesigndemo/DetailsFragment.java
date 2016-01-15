@@ -79,6 +79,18 @@ public class DetailsFragment extends Fragment {
             }
         });
 
+        imdbRatingTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(Intent.ACTION_SEND);
+
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "test");
+                i.putExtra(Intent.EXTRA_TEXT, "test");
+
+                startActivity(Intent.createChooser(i,("test chooser")));
+            }
+        });
         return view;
 
     }
