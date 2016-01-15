@@ -8,11 +8,27 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/MaterialTestTheme" >
+
+        <service
+                android:name=".ShareService"
+                android:permission="android.permission.BIND_CHOOSER_TARGET_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.chooser.ChooserTargetService"/>
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
 
-
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <meta-data
+                    android:name="android.service.chooser.chooser_target_service"
+                    android:value=".SampleChooserTargetService" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
