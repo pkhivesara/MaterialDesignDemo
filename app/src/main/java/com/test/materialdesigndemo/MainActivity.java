@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
             }
         });
 
+        Toast.makeText(this,resolveIntent(getIntent()), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -290,6 +292,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
                 .setDefaults(Notification.DEFAULT_VIBRATE);
         return notification;
 
+    }
+
+
+    private String resolveIntent(Intent intent) {
+        if (Intent.ACTION_SEND.equals(intent.getAction()) &&
+                "text/plain".equals(intent.getType())) {
+            return intent.getStringExtra(Intent.EXTRA_TEXT);
+        }
+        return null;
     }
 
 

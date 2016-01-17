@@ -85,8 +85,7 @@ public class DetailsFragment extends Fragment {
                 Intent i=new Intent(Intent.ACTION_SEND);
 
                 i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_SUBJECT, "test");
-                i.putExtra(Intent.EXTRA_TEXT, "test");
+                i.putExtra(Intent.EXTRA_TEXT, imdbRatingTextView.getText());
 
                 startActivity(Intent.createChooser(i,("test chooser")));
             }
