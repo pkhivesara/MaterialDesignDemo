@@ -26,7 +26,7 @@ public class ShareService extends ChooserTargetService {
         private ChooserTarget buildNewTarget(int i){
         String title = "test";
             Icon icon = Icon.createWithResource(getApplicationContext(),R.drawable.ic_himym_1);
-        float score = 0.5f;
+        float score = 1f;
         ComponentName componentName1 = new ComponentName(this,MainActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("ID",1);
