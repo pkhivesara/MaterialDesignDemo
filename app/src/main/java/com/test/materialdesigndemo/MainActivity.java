@@ -266,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     private android.support.v4.app.NotificationCompat.Builder showNormalNotification() {
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(this)
+
                 .setContentTitle("Title for Notification via NormalNotificationBuilder")
                 .setContentText("Content for the Notification via NormalNotificationBuilder")
                 .setTicker("Ticker Message in status bar")
