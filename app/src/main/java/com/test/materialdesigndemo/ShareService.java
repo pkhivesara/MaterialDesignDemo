@@ -6,6 +6,7 @@ import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.service.chooser.ChooserTarget;
 import android.service.chooser.ChooserTargetService;
+import com.test.materialdesigndemo.activities.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,34 +1,22 @@
-package com.test.materialdesigndemo;
+package com.test.materialdesigndemo.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.squareup.picasso.Picasso;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.test.materialdesigndemo.model.IndividualEpisodeData;
+import com.test.materialdesigndemo.R;
+import com.test.materialdesigndemo.network.RestClient;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
 
 
 public class DetailsFragment extends Fragment {

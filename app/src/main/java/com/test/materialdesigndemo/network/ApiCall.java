@@ -1,6 +1,8 @@
-package com.test.materialdesigndemo;
+package com.test.materialdesigndemo.network;
 
 
+import com.test.materialdesigndemo.model.EpisodeList;
+import com.test.materialdesigndemo.model.IndividualEpisodeData;
 import retrofit.Call;
 import retrofit.http.GET;
 import retrofit.http.Query;

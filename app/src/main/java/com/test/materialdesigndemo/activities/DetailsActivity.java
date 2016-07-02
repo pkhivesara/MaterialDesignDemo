@@ -1,4 +1,4 @@
-package com.test.materialdesigndemo;
+package com.test.materialdesigndemo.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionInflater;
 import android.view.Gravity;
@@ -19,6 +18,8 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
+import com.test.materialdesigndemo.R;
+import com.test.materialdesigndemo.fragments.DetailsFragment;
 
 
 public class DetailsActivity extends AppCompatActivity {

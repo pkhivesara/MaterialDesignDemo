@@ -1,0 +1,145 @@
+{
+  "Title": "Friends",
+  "Season": "1",
+  "totalSeasons": "10",
+  "Episodes": [{
+    "Title": "The One Where Monica Gets a Roommate",
+    "Released": "1994-09-22",
+    "Episode": "1",
+    "imdbRating": "8.5",
+    "imdbID": "tt0583459"
+  }, {
+    "Title": "The One with the Thumb",
+    "Released": "1994-10-06",
+    "Episode": "3",
+    "imdbRating": "8.3",
+    "imdbID": "tt0583653"
+  }, {
+    "Title": "The One with George Stephanopoulos",
+    "Released": "1994-10-13",
+    "Episode": "4",
+    "imdbRating": "8.3",
+    "imdbID": "tt0583521"
+  }, {
+    "Title": "The One with the East German Laundry Detergent",
+    "Released": "1994-10-20",
+    "Episode": "5",
+    "imdbRating": "8.5",
+    "imdbID": "tt0583599"
+  }, {
+    "Title": "The One with the Butt",
+    "Released": "1994-10-27",
+    "Episode": "6",
+    "imdbRating": "8.3",
+    "imdbID": "tt0583585"
+  }, {
+    "Title": "The One with the Blackout",
+    "Released": "1994-11-03",
+    "Episode": "7",
+    "imdbRating": "8.9",
+    "imdbID": "tt0583579"
+  }, {
+    "Title": "The One Where Nana Dies Twice",
+    "Released": "1994-11-10",
+    "Episode": "8",
+    "imdbRating": "8.2",
+    "imdbID": "tt0583462"
+  }, {
+    "Title": "The One Where Underdog Gets Away",
+    "Released": "1994-11-17",
+    "Episode": "9",
+    "imdbRating": "8.3",
+    "imdbID": "tt0583492"
+  }, {
+    "Title": "The One with the Monkey",
+    "Released": "1994-12-15",
+    "Episode": "10",
+    "imdbRating": "8.1",
+    "imdbID": "tt0583630"
+  }, {
+    "Title": "The One with Mrs. Bing",
+    "Released": "1995-01-05",
+    "Episode": "11",
+    "imdbRating": "8.3",
+    "imdbID": "tt0583534"
+  }, {
+    "Title": "The One with the Dozen Lasagnas",
+    "Released": "1995-01-12",
+    "Episode": "12",
+    "imdbRating": "8.3",
+    "imdbID": "tt0583598"
+  }, {
+    "Title": "The One with the Boobies",
+    "Released": "1995-01-19",
+    "Episode": "13",
+    "imdbRating": "8.7",
+    "imdbID": "tt0583582"
+  }, {
+    "Title": "The One with the Candy Hearts",
+    "Released": "1995-02-09",
+    "Episode": "14",
+    "imdbRating": "8.3",
+    "imdbID": "tt0583587"
+  }, {
+    "Title": "The One with the Stoned Guy",
+    "Released": "1995-02-16",
+    "Episode": "15",
+    "imdbRating": "8.4",
+    "imdbID": "tt0583649"
+  }, {
+    "Title": "The One with Two Parts: Part 1",
+    "Released": "1995-02-23",
+    "Episode": "16",
+    "imdbRating": "8.3",
+    "imdbID": "tt0583568"
+  }, {
+    "Title": "The One with Two Parts: Part 2",
+    "Released": "1995-02-23",
+    "Episode": "17",
+    "imdbRating": "8.5",
+    "imdbID": "tt0583569"
+  }, {
+    "Title": "The One with All the Poker",
+    "Released": "1995-03-02",
+    "Episode": "18",
+    "imdbRating": "8.9",
+    "imdbID": "tt0583510"
+  }, {
+    "Title": "The One Where the Monkey Gets Away",
+    "Released": "1995-03-09",
+    "Episode": "19",
+    "imdbRating": "8.2",
+    "imdbID": "tt0583493"
+  }, {
+    "Title": "The One with the Evil Orthodontist",
+    "Released": "1995-04-06",
+    "Episode": "20",
+    "imdbRating": "8.0",
+    "imdbID": "tt0583602"
+  }, {
+    "Title": "The One with the Fake Monica",
+    "Released": "1995-04-27",
+    "Episode": "21",
+    "imdbRating": "8.0",
+    "imdbID": "tt0583603"
+  }, {
+    "Title": "The One with the Ick Factor",
+    "Released": "1995-05-04",
+    "Episode": "22",
+    "imdbRating": "8.4",
+    "imdbID": "tt0583616"
+  }, {
+    "Title": "The One with the Birth",
+    "Released": "1995-05-11",
+    "Episode": "23",
+    "imdbRating": "8.6",
+    "imdbID": "tt0583577"
+  }, {
+    "Title": "The One Where Rachel Finds Out",
+    "Released": "1995-05-18",
+    "Episode": "24",
+    "imdbRating": "8.9",
+    "imdbID": "tt0583469"
+  }],
+  "Response": "True"
+}

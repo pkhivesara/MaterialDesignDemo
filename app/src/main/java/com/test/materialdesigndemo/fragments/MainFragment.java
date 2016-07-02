@@ -1,4 +1,4 @@
-package com.test.materialdesigndemo;
+package com.test.materialdesigndemo.fragments;
 
 
 import android.app.Activity;
@@ -6,13 +6,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,26 +19,16 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import com.test.materialdesigndemo.*;
+import com.test.materialdesigndemo.model.EpisodeList;
+import com.test.materialdesigndemo.presenters.CommonFragmentPresenter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainFragment extends Fragment implements Constants {
+public class MainFragment extends Fragment implements Constants,CommonFragmentPresenter.MainFragmentPresenterInterface {
     RecyclerView recyclerView;
     MainFragmentInterface mainFragmentInterface;
+    CommonFragmentPresenter commonFragmentPresenter;
     String season;
 
     @Override
@@ -48,8 +36,10 @@ public class MainFragment extends Fragment implements Constants {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
+
         setUpRecyclerView();
-        getIndividualEpisodeData("1");
+        commonFragmentPresenter = new CommonFragmentPresenter(this);
+        commonFragmentPresenter.getIndividualEpisodeData(getString(R.string.himym_title),"1");
         return view;
 
     }
@@ -69,24 +59,22 @@ public class MainFragment extends Fragment implements Constants {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(navDrawerClickedReceiver, new IntentFilter(NAV_DRAWER_BROADCAST_RECEIVER));
-
-
+        commonFragmentPresenter.onStart();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onStop() {
+        super.onStop();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(navDrawerClickedReceiver);
-
-
+        commonFragmentPresenter.onStop();
     }
 
-    private void initializeData(List<EpisodeList.Episodes> responseList) {
-
-        MyAdapter myAdapter = new MyAdapter(responseList);
+    @Override
+    public void setDataForRecyclerViewAdapter(List<EpisodeList.Episodes> episodes) {
+        MyAdapter myAdapter = new MyAdapter(episodes);
         recyclerView.setAdapter(myAdapter);
     }
 
@@ -101,7 +89,6 @@ public class MainFragment extends Fragment implements Constants {
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
 
         List<EpisodeList.Episodes> responseList;
-
 
         MyAdapter(List<EpisodeList.Episodes> testDataList) {
             this.responseList = testDataList;
@@ -201,25 +188,11 @@ public class MainFragment extends Fragment implements Constants {
         @Override
         public void onReceive(Context context, Intent intent) {
             season = intent.getStringExtra(context.getString(R.string.season_four));
-            getIndividualEpisodeData(season);
+            commonFragmentPresenter.getIndividualEpisodeData(getString(R.string.himym_title),season);
         }
     };
 
-    private void getIndividualEpisodeData(String season) {
-        Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList(getString(R.string.himym_title), season);
-        episodeDataList.enqueue(new Callback<EpisodeList>() {
-            @Override
-            public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
 
-                initializeData(response.body().Episodes);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.d("%%%%%", "retrofit failure");
-            }
-        });
-    }
 
 
 }

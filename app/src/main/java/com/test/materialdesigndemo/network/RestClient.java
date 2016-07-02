@@ -1,4 +1,4 @@
-package com.test.materialdesigndemo;
+package com.test.materialdesigndemo.network;
 
 
 import com.squareup.okhttp.OkHttpClient;
@@ -11,7 +11,7 @@ import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 public class RestClient {
 
     private static ApiCall REST_CLIENT;
-    private static String URL =
+    public static String URL =
             "http://www.omdbapi.com/";
 
     static {

@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.3.0'
@@ -23,6 +24,8 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
 
     compileOptions {
@@ -35,7 +38,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/test/assets', 'src/androidTest/assets/'] } }
 }
+
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.0'
@@ -49,5 +54,10 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     compile 'com.google.dagger:dagger:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.android.support:support-annotations:23.2.0'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.3.1'
+    testCompile "org.mockito:mockito-core:1.+"
 }

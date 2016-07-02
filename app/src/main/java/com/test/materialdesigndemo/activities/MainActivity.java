@@ -1,4 +1,4 @@
-package com.test.materialdesigndemo;
+package com.test.materialdesigndemo.activities;
 
 import android.Manifest;
 import android.app.Notification;
@@ -25,7 +25,6 @@ import android.support.v7.app.*;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
-import android.transition.Fade;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -36,6 +35,10 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.test.materialdesigndemo.Constants;
+import com.test.materialdesigndemo.R;
+import com.test.materialdesigndemo.fragments.MainFragment;
+import com.test.materialdesigndemo.fragments.SecondFragment;
 
 import java.util.ArrayList;
 import java.util.List;
