@@ -32,6 +32,7 @@ public class CommonFragmentPresenter {
     mainFragmentPresenterInterface.setDataForRecyclerViewAdapter(event.getEpisodesList());
     }
 
+
     public void onStart(){
         EventBus.getDefault().register(this);
     }

@@ -109,6 +109,7 @@ public class SecondFragment extends Fragment implements Constants, CommonFragmen
         recyclerView.setAdapter(myAdapter);
     }
 
+
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MainViewHolder> {
 
         List<EpisodeList.Episodes> responseList;

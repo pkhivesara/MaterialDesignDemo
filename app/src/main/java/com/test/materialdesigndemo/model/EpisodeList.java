@@ -8,6 +8,7 @@ public class EpisodeList {
     public String Season;
     public List<Episodes> Episodes;
 
+
     public class Episodes{
         public String Title;
         public String Released;
@@ -15,6 +16,18 @@ public class EpisodeList {
         public String imdbRating;
         public String imdbID;
 
+
+        public String getTitle(){
+            return Title;
+        }
+
+        public String getEpisode(){
+            return Episode;
+        }
+
+
     }
+
+
 
 }

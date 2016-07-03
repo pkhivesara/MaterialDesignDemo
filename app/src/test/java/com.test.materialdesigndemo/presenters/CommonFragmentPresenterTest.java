@@ -1,98 +1,94 @@
 package com.test.materialdesigndemo.presenters;
 
-
-import android.content.Context;
-import com.test.materialdesigndemo.network.RestClient;
+import com.test.materialdesigndemo.BuildConfig;
+import com.test.materialdesigndemo.model.EpisodeList;
+import com.test.materialdesigndemo.model.IndividualEpisodeResponseEvent;
 import junit.framework.Assert;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.configuration.MockAnnotationProcessor;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.io.BufferedReader;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import static junit.framework.Assert.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyList;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-/**
- * Created by Pratik on 7/1/16.
- */
-
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21)
 public class CommonFragmentPresenterTest {
 
-//        @Test
-//    public void setUp(){
-//            assertEquals(4,4);
-//        //commonFragmentPresenter = new CommonFragmentPresenter(mainFragmentPresenterInterface);
-//    }
 
     @Mock
     CommonFragmentPresenter.MainFragmentPresenterInterface mainFragmentPresenterInterface;
-    CommonFragmentPresenter commonFragmentPresenter;
-    MockWebServer mockWebServer;
 
-    @Mock
-    Context mockContext;
+    CommonFragmentPresenter commonFragmentPresenter;
+
+    @Captor
+    private ArgumentCaptor<ArrayList<EpisodeList.Episodes>> captor;
 
     @Before
     public void setUp() throws IOException {
         MockitoAnnotations.initMocks(this);
         commonFragmentPresenter = new CommonFragmentPresenter(mainFragmentPresenterInterface);
-        mockWebServer = new MockWebServer();
-        mockWebServer.start();
-        RestClient.URL = mockWebServer.url("/").toString();
-
-
 
     }
 
 
     @Test
-    public void testThatPresenterIsNotNull(){
+    public void testThatPresenterIsNotNull() {
         Assert.assertNotNull(mainFragmentPresenterInterface);
         assertNotNull(commonFragmentPresenter);
 
     }
 
+
     @Test
-    public void testThatEventBusIsReceivedOnMakingServiceCall() throws Exception {
-        System.out.println(CommonFragmentPresenterTest.class.getResource(".").getPath());
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(getStringFromFile("episodes_list_success.json")));
-        commonFragmentPresenter.getIndividualEpisodeData("Friends","1");
+    public void testThatEventBusIsReceivedOnASuccessfulPostWithTheCorrectObject() throws Exception {
+        commonFragmentPresenter.onStart();
+
+        List<EpisodeList.Episodes> testEpisodeList = new ArrayList();
+        EpisodeList episodeList = new EpisodeList();
+        EpisodeList.Episodes testSingleEpisode = episodeList.new Episodes();
+        testSingleEpisode.Episode = "1";
+        testSingleEpisode.Title = "Test title";
+
+        testEpisodeList.add(testSingleEpisode);
+        IndividualEpisodeResponseEvent individualEpisodeResponseEvent = new IndividualEpisodeResponseEvent(testEpisodeList);
+        EventBus.getDefault().post(individualEpisodeResponseEvent);
+
+        commonFragmentPresenter.onStop();
+
         verify(mainFragmentPresenterInterface).setDataForRecyclerViewAdapter(anyList());
+        verify(mainFragmentPresenterInterface).setDataForRecyclerViewAdapter(captor.capture());
+
+        assertThat("1", equalTo(captor.getValue().get(0).getEpisode()));
+        assertThat("Test title", equalTo(captor.getValue().get(0).getTitle()));
+
     }
 
 
-    private  String getStringFromFile(String filePath) throws Exception {
+    @Test
+    public void testThatEventBusIsNotReceivedWithAnInCorrectObject() throws Exception {
+        commonFragmentPresenter.onStart();
 
-        final InputStream stream =getClass().getClassLoader().getResourceAsStream(filePath);
-        String ret = convertStreamToString(stream);
-        stream.close();
-        return ret;
+        EventBus.getDefault().post("Invalid String to be send as a message");
+
+        commonFragmentPresenter.onStop();
+        verify(mainFragmentPresenterInterface,never()).setDataForRecyclerViewAdapter(anyList());
+
+
     }
 
-    public  String convertStreamToString(InputStream is) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        reader.close();
-        return sb.toString();
-    }
+
 }

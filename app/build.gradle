@@ -39,6 +39,7 @@ android {
         }
     }
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/test/assets', 'src/androidTest/assets/'] } }
+
 }
 
 
@@ -56,6 +57,7 @@ dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.jakewharton:butterknife:7.0.1'
+    testCompile "org.robolectric:robolectric:3.0"
     compile 'com.android.support:support-annotations:23.2.0'
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     testCompile 'com.squareup.okhttp3:mockwebserver:3.3.1'
