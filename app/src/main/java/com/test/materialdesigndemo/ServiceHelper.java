@@ -12,10 +12,11 @@ import retrofit.Retrofit;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 
 public class ServiceHelper {
-
+   // final CountDownLatch latch = new CountDownLatch(1); ---->might be needed for retrofit async unit testing
     public ServiceHelper() {
     }
 
@@ -23,27 +24,26 @@ public class ServiceHelper {
     public void getIndividualEpisodeData(String show, String season) {
 
         Call<EpisodeList> episodeDataList = RestClient.get().getEpisodeList(show, season);
-        Response<EpisodeList>  episodeListResponse = null;
-        try {
-            episodeListResponse = episodeDataList.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(episodeListResponse.isSuccess()){
-            EventBus.getDefault().post(new IndividualEpisodeResponseEvent(episodeListResponse.body().Episodes));
-        }
-//        episodeDataList.enqueue(new Callback<EpisodeList>() {
-//            @Override
-//            public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
-//                /*data persistence should take place before sending out the eventbus message.
-//                 Passing the response object directly for sample purpose. */
-//                EventBus.getDefault().post(new IndividualEpisodeResponseEvent(response.body().Episodes));
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//                Log.d("%%%%%", "retrofit failure");
-//            }
-//        });
+        episodeDataList.enqueue(new Callback<EpisodeList>() {
+            @Override
+            public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
+                /*data persistence should take place before sending out the eventbus message.
+                 Passing the response object directly for sample purpose. */
+                EventBus.getDefault().post(new IndividualEpisodeResponseEvent(response.body().Episodes));
+            //    latch.countDown(); ---->might be needed for retrofit async unit testing
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d("%%%%%", "retrofit failure");
+               // latch.countDown(); ---->might be needed for retrofit async unit testing
+            }
+        });
+
+//        try {
+//            latch.await();
+//        } catch (InterruptedException e) { ---->might be needed for retrofit async unit testing
+//            e.printStackTrace();
+//        }
     }
 }
