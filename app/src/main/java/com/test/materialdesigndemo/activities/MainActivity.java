@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     @Bind(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    public static String URL =  "http://www.omdbapi.com/";
 
 
     MenuItem menuItem;

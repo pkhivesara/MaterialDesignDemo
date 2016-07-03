@@ -3,6 +3,8 @@ package com.test.materialdesigndemo.network;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
+import com.test.materialdesigndemo.Constants;
+import com.test.materialdesigndemo.activities.MainActivity;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
@@ -11,8 +13,7 @@ import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 public class RestClient {
 
     private static ApiCall REST_CLIENT;
-    public static String URL =
-            "http://www.omdbapi.com/";
+
 
     static {
         setupRestClient();
@@ -34,7 +35,7 @@ public class RestClient {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(MainActivity.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
