@@ -1,16 +1,10 @@
 package com.test.materialdesigndemo.presenters;
 
-import android.app.Service;
 import android.content.Context;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import com.test.materialdesigndemo.BuildConfig;
-import com.test.materialdesigndemo.Constants;
 import com.test.materialdesigndemo.ServiceHelper;
 import com.test.materialdesigndemo.activities.MainActivity;
 import com.test.materialdesigndemo.model.EpisodeList;
-import com.test.materialdesigndemo.network.ApiCall;
-import com.test.materialdesigndemo.network.RestClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.greenrobot.eventbus.EventBus;
@@ -18,19 +12,20 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import static org.mockito.Matchers.any;
+import java.util.List;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.verify;
 
 
@@ -44,8 +39,11 @@ public class ServiceHelperTest {
     @Mock
     EventBus eventBus;
 
+    @Captor
+    private ArgumentCaptor<List<EpisodeList.Episodes>> captor;
+
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         server = new MockWebServer();
         serviceHelper = new ServiceHelper();
@@ -57,13 +55,15 @@ public class ServiceHelperTest {
         server.start();
         server.enqueue(new MockResponse().setResponseCode(200).setBody(getStringFromFile(RuntimeEnvironment.application, "episodes_list_success.json")));
         MainActivity.URL = server.url("/").toString();
-
-        serviceHelper.getIndividualEpisodeData("Friends","7");
-        verify(eventBus).post(any());
+        serviceHelper.setEventBus(eventBus);
+        serviceHelper.getIndividualEpisodeData("Friends", "7");
+        verify(eventBus).post(anyObject());
+        verify(eventBus).post(captor.capture());
+        assertThat(1, equalTo(captor.getAllValues().size()));
     }
 
     @After
-    public void tearDown() throws Exception{
+    public void tearDown() throws Exception {
         server.shutdown();
     }
 
