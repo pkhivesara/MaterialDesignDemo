@@ -5,6 +5,7 @@ import com.test.materialdesigndemo.BuildConfig;
 import com.test.materialdesigndemo.ServiceHelper;
 import com.test.materialdesigndemo.activities.MainActivity;
 import com.test.materialdesigndemo.model.EpisodeList;
+import com.test.materialdesigndemo.model.IndividualEpisodeResponseEvent;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.greenrobot.eventbus.EventBus;
@@ -51,7 +52,7 @@ public class ServiceHelperTest {
     }
 
     @Test
-    public void testEventBusIdPostedOnSuccessfulServiceCall() throws Exception {
+    public void testEventBusIsPostedOnSuccessfulServiceCall() throws Exception {
         server.start();
         server.enqueue(new MockResponse().setResponseCode(200).setBody(getStringFromFile(RuntimeEnvironment.application, "episodes_list_success.json")));
         MainActivity.URL = server.url("/").toString();
@@ -59,7 +60,8 @@ public class ServiceHelperTest {
         serviceHelper.getIndividualEpisodeData("Friends", "7");
         verify(eventBus).post(anyObject());
         verify(eventBus).post(captor.capture());
-        assertThat(1, equalTo(captor.getAllValues().size()));
+       IndividualEpisodeResponseEvent episodeLists = (IndividualEpisodeResponseEvent) captor.getValue();
+        assertThat("The One Where I am testing something",equalTo(episodeLists.getEpisodesList().get(0).getTitle()));
     }
 
     @After
