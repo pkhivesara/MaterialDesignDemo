@@ -47,25 +47,25 @@ public class DetailsFragment extends Fragment {
         String title = getArguments().getString(getString(R.string.title));
         String season = getArguments().getString(getString(R.string.season));
         ButterKnife.bind(this, view);
-        Call<IndividualEpisodeData> episodeDataList = RestClient.get().getEpisodeDetail(title, season, episode);
-        episodeDataList.enqueue(new Callback<IndividualEpisodeData>() {
-            @Override
-            public void onResponse(Response<IndividualEpisodeData> response, Retrofit retrofit) {
-                detailsCardDirectorTextView.setText(getString(R.string.director_name, response.body().Director));
-                detailsCardWritersTextView.setText(response.body().Writer);
-                detailsCardReleasedTextView.setText(getString(R.string.released_date, response.body().Released));
-                detailsCardPlotTextView.setText(response.body().Plot);
-                detailsCardTitleNameTextView.setText(response.body().Title);
-                imdbRatingTextView.setText(response.body().imdbRating);
-                Intent intent = new Intent(getString(R.string.load_complete_broadcast));
-                intent.putExtra("url", response.body().Poster);
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-            }
-        });
+        //Call<IndividualEpisodeData> episodeDataList = RestClient.get().getEpisodeDetail(title, season, episode);
+//        episodeDataList.enqueue(new Callback<IndividualEpisodeData>() {
+//            @Override
+//            public void onResponse(Response<IndividualEpisodeData> response, Retrofit retrofit) {
+//                detailsCardDirectorTextView.setText(getString(R.string.director_name, response.body().Director));
+//                detailsCardWritersTextView.setText(response.body().Writer);
+//                detailsCardReleasedTextView.setText(getString(R.string.released_date, response.body().Released));
+//                detailsCardPlotTextView.setText(response.body().Plot);
+//                detailsCardTitleNameTextView.setText(response.body().Title);
+//                imdbRatingTextView.setText(response.body().imdbRating);
+//                Intent intent = new Intent(getString(R.string.load_complete_broadcast));
+//                intent.putExtra("url", response.body().Poster);
+//                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//            }
+//        });
 
         imdbRatingTextView.setOnClickListener(new View.OnClickListener() {
             @Override

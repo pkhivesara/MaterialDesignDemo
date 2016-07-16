@@ -37,6 +37,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.test.materialdesigndemo.Constants;
 import com.test.materialdesigndemo.R;
+import com.test.materialdesigndemo.dagger.DaggerRetrofitComponent;
+import com.test.materialdesigndemo.dagger.RetrofitComponent;
+import com.test.materialdesigndemo.dagger.RetrofitModule;
 import com.test.materialdesigndemo.fragments.MainFragment;
 import com.test.materialdesigndemo.fragments.SecondFragment;
 
@@ -63,7 +66,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
 
     @Bind(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
-    public static String URL =  "http://www.omdbapi.com/";
+
+    public static RetrofitComponent retrofitComponent;
+    public static String URL = "http://www.omdbapi.com/";
 
 
     MenuItem menuItem;
@@ -78,8 +83,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
         showNotification(number);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        retrofitComponent = DaggerRetrofitComponent.builder().retrofitModule(new RetrofitModule()).build();
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         getWindow().setExitTransition(new Explode());
@@ -108,9 +115,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Main
             }
         });
 
-        Toast.makeText(this,resolveIntent(getIntent()), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, resolveIntent(getIntent()), Toast.LENGTH_SHORT).show();
     }
-
 
 
     @Override
