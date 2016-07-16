@@ -25,9 +25,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -60,8 +63,32 @@ public class ServiceHelperTest {
         serviceHelper.getIndividualEpisodeData("Friends", "7");
         verify(eventBus).post(anyObject());
         verify(eventBus).post(captor.capture());
-       IndividualEpisodeResponseEvent episodeLists = (IndividualEpisodeResponseEvent) captor.getValue();
+        IndividualEpisodeResponseEvent episodeLists = (IndividualEpisodeResponseEvent) captor.getValue();
         assertThat("The One Where I am testing something",equalTo(episodeLists.getEpisodesList().get(0).getTitle()));
+    }
+
+    @Test
+    public void testEventBusIsPostedWithNoDataOnServiceCallWithAnIncorrectResponse() throws Exception {
+        server.start();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(getStringFromFile(RuntimeEnvironment.application, "incorrect_success_response.json")));
+        MainActivity.URL = server.url("/").toString();
+        serviceHelper.setEventBus(eventBus);
+        serviceHelper.getIndividualEpisodeData("Friends", "7");
+        verify(eventBus).post(anyObject());
+        verify(eventBus).post(captor.capture());
+        IndividualEpisodeResponseEvent episodeLists = (IndividualEpisodeResponseEvent) captor.getValue();
+        assertNull(episodeLists.getEpisodesList());
+    }
+
+    @Test
+    public void testEventBusIsNotPostedOn500Error() throws Exception {
+        server.start();
+        server.enqueue(new MockResponse().setResponseCode(500).setBody(getStringFromFile(RuntimeEnvironment.application, "incorrect_success_response.json")));
+        MainActivity.URL = server.url("/").toString();
+        serviceHelper.setEventBus(eventBus);
+        serviceHelper.getIndividualEpisodeData("Friends", "7");
+        verifyNoMoreInteractions(eventBus);
+
     }
 
     @After

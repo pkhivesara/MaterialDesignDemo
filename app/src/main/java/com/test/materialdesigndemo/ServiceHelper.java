@@ -17,15 +17,14 @@ import java.util.concurrent.CountDownLatch;
 
 public class ServiceHelper {
     EventBus eventBus = EventBus.getDefault();
+
     public ServiceHelper() {
     }
 
 
-
-    public void setEventBus(EventBus eventBus){
+    public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
     }
-
 
 
     public void getIndividualEpisodeData(String show, String season) {
@@ -35,7 +34,11 @@ public class ServiceHelper {
             public void onResponse(Response<EpisodeList> response, Retrofit retrofit) {
                 /*data persistence should take place before sending out the eventbus message.
                  Passing the response object directly for sample purpose. */
-               eventBus.post(new IndividualEpisodeResponseEvent(response.body().Episodes));
+                if (response.errorBody() != null) {
+                    Log.d("%%%%%", response.errorBody().toString());
+                } else {
+                    eventBus.post(new IndividualEpisodeResponseEvent(response.body().Episodes));
+                }
             }
 
             @Override
