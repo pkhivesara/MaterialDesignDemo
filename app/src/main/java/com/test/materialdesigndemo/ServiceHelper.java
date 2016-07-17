@@ -1,9 +1,12 @@
 package com.test.materialdesigndemo;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.test.materialdesigndemo.activities.MainActivity;
 import com.test.materialdesigndemo.dagger.RetrofitComponent;
 import com.test.materialdesigndemo.model.EpisodeList;
+import com.test.materialdesigndemo.model.IndividualEpisodeData;
 import com.test.materialdesigndemo.model.IndividualEpisodeResponseEvent;
 import com.test.materialdesigndemo.network.ApiCall;
 import com.test.materialdesigndemo.network.RestClient;
@@ -57,5 +60,25 @@ public class ServiceHelper {
             }
         });
 
+    }
+
+    public void getEpisodeDetails(String title, String season, String episode){
+        Call<IndividualEpisodeData> episodeDataList = retrofit.getEpisodeDetail(title, season, episode);
+        episodeDataList.enqueue(new Callback<IndividualEpisodeData>() {
+            @Override
+            public void onResponse(Response<IndividualEpisodeData> response, Retrofit retrofit) {
+                if (response.errorBody() != null) {
+                    Log.d("%%%%%", response.errorBody().toString());
+                } else {
+                    eventBus.post(new IndividualEpisodeResponseEvent(response.body()));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d("%%%%%", "retrofit failure");
+            }
+        });
     }
 }

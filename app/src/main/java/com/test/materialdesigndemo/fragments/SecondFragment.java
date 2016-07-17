@@ -22,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.test.materialdesigndemo.*;
 import com.test.materialdesigndemo.model.EpisodeList;
+import com.test.materialdesigndemo.model.IndividualEpisodeData;
 import com.test.materialdesigndemo.network.RestClient;
 import com.test.materialdesigndemo.presenters.CommonFragmentPresenter;
 import retrofit.Call;
@@ -107,6 +108,11 @@ public class SecondFragment extends Fragment implements Constants, CommonFragmen
     public void setDataForRecyclerViewAdapter(List<EpisodeList.Episodes> episodes) {
         MyAdapter myAdapter = new MyAdapter(episodes);
         recyclerView.setAdapter(myAdapter);
+    }
+
+    @Override
+    public void setIndividualEpisodeDetails(IndividualEpisodeData individualEpisodeData) {
+
     }
 
 

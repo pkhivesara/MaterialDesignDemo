@@ -8,10 +8,20 @@ import java.util.List;
 public class IndividualEpisodeResponseEvent {
 
     private List<EpisodeList.Episodes> episodesList;
+    private IndividualEpisodeData individualEpisodeData;
 
     public IndividualEpisodeResponseEvent(List<EpisodeList.Episodes> episodesList){
         this.episodesList = episodesList;
 
+    }
+
+    public IndividualEpisodeResponseEvent(IndividualEpisodeData individualEpisodeData){
+        this.individualEpisodeData = individualEpisodeData;
+
+    }
+
+    public IndividualEpisodeData getIndividualEpisodeData(){
+        return individualEpisodeData;
     }
 
     public List<EpisodeList.Episodes> getEpisodesList(){

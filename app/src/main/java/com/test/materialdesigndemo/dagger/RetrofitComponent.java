@@ -1,6 +1,7 @@
 package com.test.materialdesigndemo.dagger;
 
 import com.test.materialdesigndemo.ServiceHelper;
+import com.test.materialdesigndemo.fragments.DetailsFragment;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -15,4 +16,5 @@ public interface RetrofitComponent {
 
     void inject(ServiceHelper serviceHelper);
 
+    void inject(DetailsFragment detailsFragment);
 }

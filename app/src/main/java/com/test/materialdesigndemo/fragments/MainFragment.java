@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import com.test.materialdesigndemo.*;
 import com.test.materialdesigndemo.model.EpisodeList;
+import com.test.materialdesigndemo.model.IndividualEpisodeData;
 import com.test.materialdesigndemo.presenters.CommonFragmentPresenter;
 
 import java.util.List;
@@ -76,6 +77,11 @@ public class MainFragment extends Fragment implements Constants,CommonFragmentPr
     public void setDataForRecyclerViewAdapter(List<EpisodeList.Episodes> episodes) {
         MyAdapter myAdapter = new MyAdapter(episodes);
         recyclerView.setAdapter(myAdapter);
+    }
+
+    @Override
+    public void setIndividualEpisodeDetails(IndividualEpisodeData individualEpisodeData) {
+
     }
 
     public interface MainFragmentInterface {
